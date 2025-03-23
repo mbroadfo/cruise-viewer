@@ -19,17 +19,31 @@ $includeExtensions = @(".js", ".jsx", ".ts", ".tsx", ".css", ".html", ".json", "
 $excludeFolders = @("node_modules", "dist", "build", ".git", ".next", "coverage", ".turbo")
 
 # Recursively find matching files
-Get-ChildItem -Path $projectDir -Recurse -File |
-    Where-Object {
-        $relPath = $_.FullName.Substring($projectDir.Length + 1)
-        ($includeExtensions -contains $_.Extension) -and
-        (-not ($excludeFolders | ForEach-Object { $relPath -like "*$_*" }))
-    } |
-    ForEach-Object {
-        Add-Content -Path $outputFile -Value "# FILE: $($_.FullName.Substring($projectDir.Length + 1))"
-        Add-Content -Path $outputFile -Value ""
-        Get-Content $_.FullName | Add-Content -Path $outputFile
-        Add-Content -Path $outputFile -Value "`n`n"
+$allFiles = Get-ChildItem -Path $projectDir -Recurse -File
+
+foreach ($file in $allFiles) {
+    $relPath = $file.FullName.Substring($projectDir.Length + 1)
+
+    # Skip excluded folders
+    $skip = $false
+    foreach ($folder in $excludeFolders) {
+        if ($relPath -like "*$folder*") {
+            $skip = $true
+            break
+        }
     }
+
+    # Skip files not matching the extension list
+    if ($skip -or -not ($includeExtensions -contains $file.Extension)) {
+        continue
+    }
+
+    # Write-Host "Including: $relPath"
+
+    Add-Content -Path $outputFile -Value "# FILE: $relPath"
+    Add-Content -Path $outputFile -Value ""
+    Get-Content $file.FullName | Add-Content -Path $outputFile
+    Add-Content -Path $outputFile -Value "`n`n"
+}
 
 Write-Output "Dumped cruise viewer source files to: $outputFile"
