@@ -80,8 +80,13 @@ function TripViewer() {
 
   return (
     <>
-      <header className="sticky top-0 z-10 bg-white border-b p-3 text-xl font-bold">
-        Lindblad Cruise Finder
+      <header className="sticky top-0 z-10 bg-white border-b p-4 flex justify-between items-center shadow-sm">
+        <h1 className="text-xl font-bold text-gray-800">
+          Lindblad Cruise Availability Finder
+        </h1>
+        <div className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full font-medium">
+          {filteredTrips.length} Trip{filteredTrips.length !== 1 ? 's' : ''} found
+        </div>
       </header>
 
       <div className="grid grid-cols-[250px_1fr] h-[calc(100vh-56px)] overflow-hidden">
