@@ -1,29 +1,103 @@
-// src/TripViewer.jsx
 import { useEffect, useState } from 'react';
-import { fetchAndSortTrips } from './components/fetchAndSortTrips';
+import { fetchAndSortTrips } from './components/FetchAndSortTrips';
 import TripCard from './components/TripCard';
+import FilterSidebar from './components/FilterSidebar';
+
+const durationRanges = [
+  { label: '1–4 days', min: 1, max: 4 },
+  { label: '5–7 days', min: 5, max: 7 },
+  { label: '8–14 days', min: 8, max: 14 },
+  { label: '15+ days', min: 15, max: Infinity },
+];
 
 function TripViewer() {
-  const [trips, setTrips] = useState([]);
+  const [allTrips, setAllTrips] = useState([]);
+  const [filteredTrips, setFilteredTrips] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [filters, setFilters] = useState({
+    startDate: '',
+    endDate: '',
+    minCabins: 1,
+    ships: [],
+    durations: [],
+  });
 
   useEffect(() => {
     const loadTrips = async () => {
       const trips = await fetchAndSortTrips();
-      setTrips(trips);
+      setAllTrips(trips);
       setLoading(false);
     };
     loadTrips();
   }, []);
 
+  useEffect(() => {
+    if (!allTrips.length) return;
+
+    const filtered = allTrips
+      .map((trip) => {
+        const matchingDepartures = trip.departures.filter((dep) => {
+          const depDate = new Date(dep.start_date);
+          const endDate = new Date(dep.end_date);
+          const duration = Math.floor((endDate - depDate) / (1000 * 60 * 60 * 24));
+          const cabinCount = dep.categories.reduce(
+            (sum, c) => c.status === 'Available' ? sum + c.num_cabins : sum,
+            0
+          );
+
+          const matchesDuration =
+            filters.durations.length === 0 ||
+            filters.durations.some((label) => {
+              const range = durationRanges.find((r) => r.label === label);
+              return range && duration >= range.min && duration <= range.max;
+            });
+
+          return (
+            (!filters.startDate || depDate >= new Date(filters.startDate)) &&
+            (!filters.endDate || depDate <= new Date(filters.endDate)) &&
+            (cabinCount >= filters.minCabins) &&
+            (filters.ships.length === 0 || filters.ships.includes(dep.ship)) &&
+            matchesDuration
+          );
+        });
+
+        if (!matchingDepartures.length) return null;
+
+        return {
+          ...trip,
+          departures: matchingDepartures,
+        };
+      })
+      .filter(Boolean);
+
+    setFilteredTrips(filtered);
+  }, [allTrips, filters]);
+
+  const ships = [...new Set(allTrips.flatMap((t) => t.departures.map((d) => d.ship)))].sort();
+
   if (loading) return <div className="p-4">Loading...</div>;
 
   return (
-    <div className="p-4 space-y-4">
-      {trips.map((trip, i) => (
-        <TripCard key={i} trip={trip} index={i} />
-      ))}
-    </div>
+    <>
+      <header className="sticky top-0 z-10 bg-white border-b p-3 text-xl font-bold">
+        Lindblad Cruise Finder
+      </header>
+
+      <div className="grid grid-cols-[250px_1fr] h-[calc(100vh-56px)] overflow-hidden">
+        <FilterSidebar
+          filters={filters}
+          onFilterChange={setFilters}
+          ships={ships}
+        />
+
+        <div className="p-4 space-y-4 overflow-y-auto">
+          {filteredTrips.map((trip, i) => (
+            <TripCard key={i} trip={trip} index={i} />
+          ))}
+        </div>
+      </div>
+    </>
   );
 }
 

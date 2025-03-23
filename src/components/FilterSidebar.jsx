@@ -1,0 +1,144 @@
+import React from 'react';
+
+const durationRanges = [
+  { label: '1–4 days', min: 1, max: 4 },
+  { label: '5–7 days', min: 5, max: 7 },
+  { label: '8–14 days', min: 8, max: 14 },
+  { label: '15+ days', min: 15, max: Infinity },
+];
+
+function FilterSidebar({ filters, onFilterChange, ships }) {
+  const handleChange = (e) => {
+    const { name, value, type, selectedOptions } = e.target;
+
+    if (type === 'select-multiple') {
+      const values = Array.from(selectedOptions).map((o) => o.value);
+      onFilterChange({ ...filters, [name]: values });
+    } else {
+      onFilterChange({ ...filters, [name]: value });
+    }
+  };
+
+  return (
+    <aside className="p-4 border-r border-gray-200 bg-white w-60 text-sm space-y-6 overflow-y-auto">
+      <div>
+        <label className="block font-medium mb-1">Start Date</label>
+        <input
+          type="date"
+          name="startDate"
+          value={filters.startDate}
+          onChange={handleChange}
+          className="w-full border border-gray-300 rounded px-2 py-1"
+        />
+      </div>
+
+      <div>
+        <label className="block font-medium mb-1">End Date</label>
+        <input
+          type="date"
+          name="endDate"
+          value={filters.endDate}
+          min={filters.startDate}
+          onChange={handleChange}
+          className="w-full border border-gray-300 rounded px-2 py-1"
+        />
+      </div>
+
+      <div className="text-gray-400 italic">
+        Destination filter coming soon...
+      </div>
+
+      <div>
+        <label className="block font-medium mb-1">Min Cabin Availability</label>
+        <input
+          type="number"
+          name="minCabins"
+          value={filters.minCabins}
+          onChange={handleChange}
+          className="w-full border border-gray-300 rounded px-2 py-1"
+          min={0}
+        />
+      </div>
+
+      <div>
+        <label className="block font-medium mb-1">Ships</label>
+        <select
+          name="ships"
+          multiple
+          value={filters.ships}
+          onChange={handleChange}
+          className="w-full border border-gray-300 rounded px-2 py-1 h-28"
+        >
+          {ships.map((ship) => (
+            <option key={ship} value={ship}>
+              {ship}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label className="block font-medium mb-1">Durations</label>
+        <select
+          name="durations"
+          multiple
+          value={filters.durations}
+          onChange={handleChange}
+          className="w-full border border-gray-300 rounded px-2 py-1 h-28"
+        >
+          {durationRanges.map((range) => (
+            <option key={range.label} value={range.label}>
+              {range.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="pt-6 border-t border-gray-200 space-y-2">
+        <button
+          type="button"
+          aria-label="Expand all trips and departures"
+          className="w-full text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded"
+          onClick={(e) => {
+            e.preventDefault();
+            document.querySelectorAll('details').forEach((el) => (el.open = true));
+          }}
+        >
+          Expand All
+        </button>
+
+        <button
+          type="button"
+          aria-label="Collapse all trips and departures"
+          className="w-full text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded"
+          onClick={(e) => {
+            e.preventDefault();
+            document.querySelectorAll('details').forEach((el) => (el.open = false));
+          }}
+        >
+          Collapse All
+        </button>
+
+        <button
+          type="button"
+          aria-label="Clear all filters"
+          className="w-full text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium px-3 py-1 rounded"
+          onClick={(e) => {
+            e.preventDefault();
+            onFilterChange({
+              startDate: '',
+              endDate: '',
+              minCabins: 1,
+              ships: [],
+              durations: [],
+            });
+          }}
+        >
+          Clear Filters
+        </button>
+      </div>
+    </aside>
+  );
+}
+
+export default FilterSidebar;
