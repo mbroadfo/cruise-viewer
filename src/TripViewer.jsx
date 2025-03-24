@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useState } from 'react';
 import { fetchAndSortTrips } from './components/FetchAndSortTrips';
 import TripCard from './components/TripCard';
@@ -21,6 +22,7 @@ function TripViewer() {
     minCabins: 1,
     ships: [],
     durations: [],
+    destinations: [],
   });
 
   useEffect(() => {
@@ -62,7 +64,15 @@ function TripViewer() {
           );
         });
 
-        if (!matchingDepartures.length) return null;
+        if (
+          !matchingDepartures.length ||
+          (filters.destinations.length > 0 &&
+            !trip.destinations?.split('|').some((d) =>
+              filters.destinations.includes(d.trim())
+            ))
+        ) {
+          return null;
+        }        
 
         return {
           ...trip,
@@ -75,6 +85,7 @@ function TripViewer() {
   }, [allTrips, filters]);
 
   const ships = [...new Set(allTrips.flatMap((t) => t.departures.map((d) => d.ship)))].sort();
+  const destinations = [...new Set(allTrips.flatMap((t) => (t.destinations?.split('|').map((d) => d.trim()) || [])))].sort();
 
   if (loading) return <div className="p-4">Loading...</div>;
 
@@ -94,6 +105,7 @@ function TripViewer() {
           filters={filters}
           onFilterChange={setFilters}
           ships={ships}
+          destinations={destinations}
         />
 
         <div className="p-4 space-y-4 overflow-y-auto">

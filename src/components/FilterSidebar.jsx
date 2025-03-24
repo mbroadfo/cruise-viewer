@@ -7,7 +7,7 @@ const durationRanges = [
   { label: '15+ days', min: 15, max: Infinity },
 ];
 
-function FilterSidebar({ filters, onFilterChange, ships }) {
+function FilterSidebar({ filters, onFilterChange, ships, destinations }) {
   const handleChange = (e) => {
     const { name, value, type, selectedOptions } = e.target;
 
@@ -44,8 +44,21 @@ function FilterSidebar({ filters, onFilterChange, ships }) {
         />
       </div>
 
-      <div className="text-gray-400 italic">
-        Destination filter coming soon...
+      <div>
+        <label className="block font-medium mb-1">Destinations</label>
+        <select
+          name="destinations"
+          multiple
+          value={filters.destinations}
+          onChange={handleChange}
+          className="w-full border border-gray-300 rounded px-2 py-1 h-28"
+        >
+          {(destinations || []).map((dest) => (
+            <option key={dest} value={dest}>
+              {dest}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div>
@@ -131,6 +144,7 @@ function FilterSidebar({ filters, onFilterChange, ships }) {
               minCabins: 1,
               ships: [],
               durations: [],
+              destinations: [],
             });
           }}
         >
