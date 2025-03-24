@@ -1,4 +1,3 @@
-// src/components/DepartureRow.jsx
 import React, { useRef, useState } from 'react';
 import { ChevronDown, ChevronRight, CalendarDays, Ship } from 'lucide-react';
 import CabinCategoryRow from './CabinCategoryRow';
@@ -39,23 +38,19 @@ function DepartureRow({ departure }) {
       onToggle={handleToggle}
       className="ml-4 mb-2 border border-gray-200 rounded"
     >
-      <summary className="cursor-pointer p-2 grid grid-cols-[auto_1fr_auto] items-center text-sm font-semibold border-b border-gray-300 gap-4 bg-gray-50">
+      <summary className="cursor-pointer p-2 grid grid-cols-[auto_1fr_auto_auto] items-center text-sm font-semibold border-b border-gray-300 gap-4 bg-gray-50">
+        {/* Chevron + Ship name (toggle only) */}
         <div className="flex items-center gap-2">
           <span className="w-4">
             {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </span>
           <span className="flex items-center gap-1 text-blue-600">
             <Ship size={14} className="text-gray-400" />
-            <a
-              href={departure.booking_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:underline"
-            >
-              {departure.ship}
-            </a>
+            {departure.ship}
           </span>
         </div>
+
+        {/* Date & Countdown */}
         <div className="flex items-center justify-center gap-4 text-gray-700">
           <span className="flex items-center gap-1">
             <CalendarDays size={14} className="text-gray-400" />
@@ -65,10 +60,26 @@ function DepartureRow({ departure }) {
             {diffDays} days away
           </span>
         </div>
+
+        {/* See Trip link */}
+        <div className="text-right pr-1">
+          <a
+            href={departure.booking_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="text-xs text-blue-600 hover:underline"
+          >
+            See Trip
+          </a>
+        </div>
+
+        {/* Cabin count */}
         <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-xs whitespace-nowrap">
           {totalAvailable} cabins available
         </span>
       </summary>
+
       <div className="px-2 pb-2 space-y-1 transition-all duration-300 ease-in-out">
         {availableCats.map((cat, i) => (
           <CabinCategoryRow key={i} category={cat} />
