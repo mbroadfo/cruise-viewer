@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { fetchAndSortTrips } from './components/FetchAndSortTrips';
 import TripCard from './components/TripCard';
 import FilterSidebar from './components/FilterSidebar';
@@ -15,6 +14,8 @@ function TripViewer() {
   const [allTrips, setAllTrips] = useState([]);
   const [filteredTrips, setFilteredTrips] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [minStartDate, setMinStartDate] = useState('');
+  const [maxEndDate, setMaxEndDate] = useState('');
 
   const [filters, setFilters] = useState({
     startDate: '',
@@ -30,7 +31,23 @@ function TripViewer() {
       const trips = await fetchAndSortTrips();
       setAllTrips(trips);
       setLoading(false);
+
+      const allStartDates = trips.flatMap(t => t.departures.map(d => new Date(d.start_date)));
+      const allEndDates = trips.flatMap(t => t.departures.map(d => new Date(d.end_date)));
+
+      const minDate = new Date(Math.min(...allStartDates)).toISOString().split('T')[0];
+      const maxDate = new Date(Math.max(...allEndDates)).toISOString().split('T')[0];
+
+      setMinStartDate(minDate);
+      setMaxEndDate(maxDate);
+
+      setFilters(prev => ({
+        ...prev,
+        startDate: minDate,
+        endDate: maxDate,
+      }));
     };
+
     loadTrips();
   }, []);
 
@@ -72,7 +89,7 @@ function TripViewer() {
             ))
         ) {
           return null;
-        }        
+        }
 
         return {
           ...trip,
@@ -106,6 +123,8 @@ function TripViewer() {
           onFilterChange={setFilters}
           ships={ships}
           destinations={destinations}
+          minStartDate={minStartDate}
+          maxEndDate={maxEndDate}
         />
 
         <div className="p-4 space-y-4 overflow-y-auto">

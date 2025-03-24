@@ -7,7 +7,7 @@ const durationRanges = [
   { label: '15+ days', min: 15, max: Infinity },
 ];
 
-function FilterSidebar({ filters, onFilterChange, ships, destinations }) {
+function FilterSidebar({ filters, onFilterChange, ships, destinations, minStartDate, maxEndDate }) {
   const handleChange = (e) => {
     const { name, value, type, selectedOptions } = e.target;
 
@@ -28,6 +28,8 @@ function FilterSidebar({ filters, onFilterChange, ships, destinations }) {
           name="startDate"
           value={filters.startDate}
           onChange={handleChange}
+          min={minStartDate}
+          max={maxEndDate}
           className="w-full border border-gray-300 rounded px-2 py-1"
         />
       </div>
@@ -38,8 +40,9 @@ function FilterSidebar({ filters, onFilterChange, ships, destinations }) {
           type="date"
           name="endDate"
           value={filters.endDate}
-          min={filters.startDate}
           onChange={handleChange}
+          min={filters.startDate || minStartDate}
+          max={maxEndDate}
           className="w-full border border-gray-300 rounded px-2 py-1"
         />
       </div>
@@ -139,8 +142,8 @@ function FilterSidebar({ filters, onFilterChange, ships, destinations }) {
           onClick={(e) => {
             e.preventDefault();
             onFilterChange({
-              startDate: '',
-              endDate: '',
+              startDate: minStartDate,
+              endDate: maxEndDate,
               minCabins: 1,
               ships: [],
               durations: [],
