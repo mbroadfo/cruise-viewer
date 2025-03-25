@@ -71,6 +71,10 @@ function TripCard({ trip, index }) {
             alt={trip.trip_name}
             className="w-32 h-20 object-cover rounded shrink-0"
             onClick={(e) => e.stopPropagation()}
+            onError={(e) => {
+              e.currentTarget.onerror = null; // prevent infinite loop
+              e.currentTarget.src = 'https://da389rkfiajdk.cloudfront.net/favicon.jpg';
+            }}
           />
         )}
       </summary>
