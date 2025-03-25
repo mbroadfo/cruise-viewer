@@ -1,7 +1,7 @@
 // src/utils/fetchAndSortTrips.js
 
 export async function fetchAndSortTrips() {
-    const res = await fetch('https://mytripdata8675309.s3.amazonaws.com/trip_list.json');
+    const res = await fetch('https://da389rkfiajdk.cloudfront.net/trip_list.json');
     const rawTrips = await res.json();
   
     const enrichedTrips = rawTrips.map((trip, tripIndex) => {
