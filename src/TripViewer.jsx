@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import { fetchAndSortTrips } from './components/FetchAndSortTrips';
 import TripCard from './components/TripCard';
 import FilterSidebar from './components/FilterSidebar';
+import { useEffect, useState } from 'react';
 
 const durationRanges = [
   { label: '1–4 days', min: 1, max: 4 },
@@ -11,12 +13,9 @@ const durationRanges = [
 ];
 
 function TripViewer() {
+  const { isAuthenticated, loginWithRedirect, logout, isLoading, user } = useAuth0();
   const [allTrips, setAllTrips] = useState([]);
   const [filteredTrips, setFilteredTrips] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [minStartDate, setMinStartDate] = useState('');
-  const [maxEndDate, setMaxEndDate] = useState('');
-
   const [filters, setFilters] = useState({
     startDate: '',
     endDate: '',
@@ -25,29 +24,38 @@ function TripViewer() {
     durations: [],
     destinations: [],
   });
+  const [dateBounds, setDateBounds] = useState({ min: '', max: '' });
+
+  useEffect(() => {
+    console.log("Auth check:", {
+      isLoading,
+      isAuthenticated,
+      user
+    });
+  
+    if (isLoading) return;
+  
+    if (!isAuthenticated) {
+      console.log("🔁 Triggering login redirect...");
+      debugger; // <- Execution will pause here in dev tools
+      loginWithRedirect();
+    }
+  }, [isLoading, isAuthenticated]);  
 
   useEffect(() => {
     const loadTrips = async () => {
       const trips = await fetchAndSortTrips();
       setAllTrips(trips);
-      setLoading(false);
 
-      const allStartDates = trips.flatMap(t => t.departures.map(d => new Date(d.start_date)));
-      const allEndDates = trips.flatMap(t => t.departures.map(d => new Date(d.end_date)));
+      // Compute min/max dates for bounds
+      const allDates = trips.flatMap((t) => t.departures.map((d) => new Date(d.start_date)));
+      const min = allDates.length ? new Date(Math.min(...allDates)) : '';
+      const max = allDates.length ? new Date(Math.max(...allDates)) : '';
+      const fmt = (d) => d.toISOString().split('T')[0];
 
-      const minDate = new Date(Math.min(...allStartDates)).toISOString().split('T')[0];
-      const maxDate = new Date(Math.max(...allEndDates)).toISOString().split('T')[0];
-
-      setMinStartDate(minDate);
-      setMaxEndDate(maxDate);
-
-      setFilters(prev => ({
-        ...prev,
-        startDate: minDate,
-        endDate: maxDate,
-      }));
+      setFilters((f) => ({ ...f, startDate: fmt(min), endDate: fmt(max) }));
+      setDateBounds({ min: fmt(min), max: fmt(max) });
     };
-
     loadTrips();
   }, []);
 
@@ -61,7 +69,7 @@ function TripViewer() {
           const endDate = new Date(dep.end_date);
           const duration = Math.floor((endDate - depDate) / (1000 * 60 * 60 * 24));
           const cabinCount = dep.categories.reduce(
-            (sum, c) => c.status === 'Available' ? sum + c.num_cabins : sum,
+            (sum, c) => (c.status === 'Available' ? sum + c.num_cabins : sum),
             0
           );
 
@@ -75,7 +83,7 @@ function TripViewer() {
           return (
             (!filters.startDate || depDate >= new Date(filters.startDate)) &&
             (!filters.endDate || depDate <= new Date(filters.endDate)) &&
-            (cabinCount >= filters.minCabins) &&
+            cabinCount >= filters.minCabins &&
             (filters.ships.length === 0 || filters.ships.includes(dep.ship)) &&
             matchesDuration
           );
@@ -84,17 +92,12 @@ function TripViewer() {
         if (
           !matchingDepartures.length ||
           (filters.destinations.length > 0 &&
-            !trip.destinations?.split('|').some((d) =>
-              filters.destinations.includes(d.trim())
-            ))
+            !trip.destinations?.split('|').some((d) => filters.destinations.includes(d.trim())))
         ) {
           return null;
         }
 
-        return {
-          ...trip,
-          departures: matchingDepartures,
-        };
+        return { ...trip, departures: matchingDepartures };
       })
       .filter(Boolean);
 
@@ -102,18 +105,31 @@ function TripViewer() {
   }, [allTrips, filters]);
 
   const ships = [...new Set(allTrips.flatMap((t) => t.departures.map((d) => d.ship)))].sort();
-  const destinations = [...new Set(allTrips.flatMap((t) => (t.destinations?.split('|').map((d) => d.trim()) || [])))].sort();
+  const destinations = [...new Set(allTrips.flatMap((t) => t.destinations?.split('|').map((d) => d.trim()) || []))].sort();
 
-  if (loading) return <div className="p-4">Loading...</div>;
+  // Handle loading state from Auth0
+  if (isLoading) return <div className="p-4">Loading authentication...</div>;
+
+  // If not logged in, redirect immediately
+  if (!isAuthenticated) {
+    loginWithRedirect();
+    return null;
+  }
 
   return (
     <>
       <header className="sticky top-0 z-10 bg-white border-b p-4 flex justify-between items-center shadow-sm">
-        <h1 className="text-xl font-bold text-gray-800">
-          Lindblad Cruise Availability Finder
-        </h1>
-        <div className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full font-medium">
-          {filteredTrips.length} Trip{filteredTrips.length !== 1 ? 's' : ''} found
+        <h1 className="text-xl font-bold text-gray-800">Lindblad Cruise Availability Finder</h1>
+        <div className="flex items-center gap-4">
+          <span className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full font-medium">
+            {filteredTrips.length} Trip{filteredTrips.length !== 1 ? 's' : ''} found
+          </span>
+          <button
+            className="bg-gray-100 hover:bg-gray-200 text-sm px-3 py-1 rounded"
+            onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+          >
+            Log out {user?.name && `(${user.name})`}
+          </button>
         </div>
       </header>
 
@@ -123,10 +139,8 @@ function TripViewer() {
           onFilterChange={setFilters}
           ships={ships}
           destinations={destinations}
-          minStartDate={minStartDate}
-          maxEndDate={maxEndDate}
+          dateBounds={dateBounds}
         />
-
         <div className="p-4 space-y-4 overflow-y-auto">
           {filteredTrips.map((trip, i) => (
             <TripCard key={i} trip={trip} index={i} />
