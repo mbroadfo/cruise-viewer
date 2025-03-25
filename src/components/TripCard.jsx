@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { ChevronRight, ChevronDown } from 'lucide-react';
 import DepartureRow from './DepartureRow';
+import { config } from "../config.js";
 
 function TripCard({ trip, index }) {
   const detailsRef = useRef(null);
@@ -69,12 +70,12 @@ function TripCard({ trip, index }) {
           <img
             src={trip.image_url}
             alt={trip.trip_name}
-            className="w-32 h-20 object-cover rounded shrink-0"
             onClick={(e) => e.stopPropagation()}
             onError={(e) => {
-              e.currentTarget.onerror = null; // prevent infinite loop
-              e.currentTarget.src = 'https://da389rkfiajdk.cloudfront.net/favicon.jpg';
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = config.fallbackImage;
             }}
+            className="w-32 h-20 object-cover rounded shrink-0"
           />
         )}
       </summary>

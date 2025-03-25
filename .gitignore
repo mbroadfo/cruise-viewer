@@ -25,3 +25,7 @@ dist-ssr
 
 # Folders
 output/
+
+# Only ignore local overrides
+.env.local
+.env.*.local
