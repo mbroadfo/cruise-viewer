@@ -38,9 +38,10 @@ export default [
 
 # FILE: index.html
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
+    <link rel="icon" type="image/jpeg" href="/favicon.jpg" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cruise Viewer</title>
@@ -65,7 +66,9 @@ export default [
       "name": "cruise-viewer",
       "version": "0.0.0",
       "dependencies": {
+        "@auth0/auth0-react": "^2.3.0",
         "@aws-sdk/client-s3": "^3.758.0",
+        "lucide-react": "^0.483.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "ui": "github:shadcn/ui"
@@ -109,6 +112,25 @@ export default [
       "engines": {
         "node": ">=6.0.0"
       }
+    },
+    "node_modules/@auth0/auth0-react": {
+      "version": "2.3.0",
+      "resolved": "https://registry.npmjs.org/@auth0/auth0-react/-/auth0-react-2.3.0.tgz",
+      "integrity": "sha512-YYTc/DWWigKC9fURufR/79h3+3DAnIzbfEzJLZ8Z4Q0BXE0azru3pKUbU+vYzS4lMAJkclwLuAbUnLjK81vCpA==",
+      "license": "MIT",
+      "dependencies": {
+        "@auth0/auth0-spa-js": "^2.1.3"
+      },
+      "peerDependencies": {
+        "react": "^16.11.0 || ^17 || ^18 || ^19",
+        "react-dom": "^16.11.0 || ^17 || ^18 || ^19"
+      }
+    },
+    "node_modules/@auth0/auth0-spa-js": {
+      "version": "2.1.3",
+      "resolved": "https://registry.npmjs.org/@auth0/auth0-spa-js/-/auth0-spa-js-2.1.3.tgz",
+      "integrity": "sha512-NMTBNuuG4g3rame1aCnNS5qFYIzsTUV5qTFPRfTyYFS1feS6jsCBR+eTq9YkxCp1yuoM2UIcjunPaoPl77U9xQ==",
+      "license": "MIT"
     },
     "node_modules/@aws-crypto/crc32": {
       "version": "5.2.0",
@@ -9041,6 +9063,15 @@ export default [
         "yallist": "^3.0.2"
       }
     },
+    "node_modules/lucide-react": {
+      "version": "0.483.0",
+      "resolved": "https://registry.npmjs.org/lucide-react/-/lucide-react-0.483.0.tgz",
+      "integrity": "sha512-WldsY17Qb/T3VZdMnVQ9C3DDIP7h1ViDTHVdVGnLZcvHNg30zH/MTQ04RTORjexoGmpsXroiQXZ4QyR0kBy0FA==",
+      "license": "ISC",
+      "peerDependencies": {
+        "react": "^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+      }
+    },
     "node_modules/magic-string": {
       "version": "0.30.17",
       "resolved": "https://registry.npmjs.org/magic-string/-/magic-string-0.30.17.tgz",
@@ -12324,7 +12355,7 @@ export default [
     },
     "node_modules/ui": {
       "version": "0.0.1",
-      "resolved": "git+ssh://git@github.com/shadcn/ui.git#37e5192fe73a089e6dd0e07a59ebe2136dd48cd3",
+      "resolved": "git+ssh://git@github.com/shadcn/ui.git#1fcb318c56733b14210947696bcc68c79668719e",
       "license": "MIT",
       "workspaces": [
         "apps/*",
@@ -13098,9 +13129,9 @@ export default [
       }
     },
     "node_modules/ui/node_modules/vite": {
-      "version": "5.4.14",
-      "resolved": "https://registry.npmjs.org/vite/-/vite-5.4.14.tgz",
-      "integrity": "sha512-EK5cY7Q1D8JNhSaPKVK4pwBFvaTmZxEnoKXLG/U9gmdDcihQGNzFlgIvaxezFR4glP1LsuiedwMBqCXH3wZccA==",
+      "version": "5.4.15",
+      "resolved": "https://registry.npmjs.org/vite/-/vite-5.4.15.tgz",
+      "integrity": "sha512-6ANcZRivqL/4WtwPGTKNaosuNJr5tWiftOC7liM7G9+rMb8+oeJeyzymDu4rTN93seySBmbjSfsS3Vzr19KNtA==",
       "license": "MIT",
       "dependencies": {
         "esbuild": "^0.21.3",
@@ -13789,9 +13820,9 @@ export default [
       }
     },
     "node_modules/vite-node/node_modules/vite": {
-      "version": "5.4.14",
-      "resolved": "https://registry.npmjs.org/vite/-/vite-5.4.14.tgz",
-      "integrity": "sha512-EK5cY7Q1D8JNhSaPKVK4pwBFvaTmZxEnoKXLG/U9gmdDcihQGNzFlgIvaxezFR4glP1LsuiedwMBqCXH3wZccA==",
+      "version": "5.4.15",
+      "resolved": "https://registry.npmjs.org/vite/-/vite-5.4.15.tgz",
+      "integrity": "sha512-6ANcZRivqL/4WtwPGTKNaosuNJr5tWiftOC7liM7G9+rMb8+oeJeyzymDu4rTN93seySBmbjSfsS3Vzr19KNtA==",
       "license": "MIT",
       "dependencies": {
         "esbuild": "^0.21.3",
@@ -14364,9 +14395,9 @@ export default [
       }
     },
     "node_modules/vitest/node_modules/vite": {
-      "version": "5.4.14",
-      "resolved": "https://registry.npmjs.org/vite/-/vite-5.4.14.tgz",
-      "integrity": "sha512-EK5cY7Q1D8JNhSaPKVK4pwBFvaTmZxEnoKXLG/U9gmdDcihQGNzFlgIvaxezFR4glP1LsuiedwMBqCXH3wZccA==",
+      "version": "5.4.15",
+      "resolved": "https://registry.npmjs.org/vite/-/vite-5.4.15.tgz",
+      "integrity": "sha512-6ANcZRivqL/4WtwPGTKNaosuNJr5tWiftOC7liM7G9+rMb8+oeJeyzymDu4rTN93seySBmbjSfsS3Vzr19KNtA==",
       "license": "MIT",
       "dependencies": {
         "esbuild": "^0.21.3",
@@ -14841,7 +14872,9 @@ export default [
     "preview": "vite preview"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^2.3.0",
     "@aws-sdk/client-s3": "^3.758.0",
+    "lucide-react": "^0.483.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "ui": "github:shadcn/ui"
@@ -14907,104 +14940,13 @@ export default {
 
 # FILE: vite.config.js
 
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    hmr: {
-      overlay: false, // Prevents the error overlay from blocking the UI
-    },
-  },
-});
-
-
-
-# FILE: src\App.css
-
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+// vite.config.js
+export default {
+    server: {
+      port: 5173
+    }
   }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-
-
-# FILE: src\App.jsx
-
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
-
-export default App
+  
 
 
 
@@ -15045,6 +14987,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  overflow: hidden;
 }
 
 h1 {
@@ -15091,12 +15034,29 @@ button:focus-visible {
 
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
+import { Auth0Provider } from "@auth0/auth0-react";
 import TripViewer from "./TripViewer.jsx";
+import "./index.css";
+
+const domain = "dev-jdsnf3lqod8nxlnv.us.auth0.com";
+const clientId = "cWyvoIKHMZZL7KhhU0LlZYFBzSbBywFJ";
+const audience = "https://cruise-viewer-api";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <TripViewer />
+    <Auth0Provider
+      domain={domain}
+      clientId={clientId}
+      authorizationParams={{
+        redirect_uri: window.location.origin,
+        audience,
+        scope: "openid profile email",
+      }}
+      cacheLocation="localstorage"
+      useRefreshTokens={true}
+    >
+      <TripViewer />
+    </Auth0Provider>
   </React.StrictMode>
 );
 
@@ -15104,77 +15064,597 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 
 # FILE: src\TripViewer.jsx
 
-import { useState, useEffect } from "react";
+import React from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { fetchAndSortTrips } from './components/FetchAndSortTrips';
+import TripCard from './components/TripCard';
+import FilterSidebar from './components/FilterSidebar';
+import { useEffect, useState } from 'react';
 
-export default function TripViewer() {
-  const [trips, setTrips] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const durationRanges = [
+  { label: '1–4 days', min: 1, max: 4 },
+  { label: '5–7 days', min: 5, max: 7 },
+  { label: '8–14 days', min: 8, max: 14 },
+  { label: '15+ days', min: 15, max: Infinity },
+];
 
-  const TRIP_JSON_URL = "https://mytripdata8675309.s3.us-west-2.amazonaws.com/trip_list.json";
-
-  console.log("🚀 Component Rendered - useEffect should run");
+function TripViewer() {
+  const { isAuthenticated, loginWithRedirect, logout, isLoading, user } = useAuth0();
+  const [allTrips, setAllTrips] = useState([]);
+  const [filteredTrips, setFilteredTrips] = useState([]);
+  const [filters, setFilters] = useState({
+    startDate: '',
+    endDate: '',
+    minCabins: 1,
+    ships: [],
+    durations: [],
+    destinations: [],
+  });
+  const [dateBounds, setDateBounds] = useState({ min: '', max: '' });
 
   useEffect(() => {
-    console.log("🔄 Inside useEffect - Fetching data from:", TRIP_JSON_URL);
+    console.log("Auth check:", {
+      isLoading,
+      isAuthenticated,
+      user
+    });
+  
+    if (isLoading) return;
+  
+    if (!isAuthenticated) {
+      console.log("🔁 Triggering login redirect...");
+      //debugger; // <- Execution will pause here in dev tools
+      loginWithRedirect();
+    }
+  }, [isLoading, isAuthenticated, loginWithRedirect, user]);  
 
-    const fetchTrips = async () => {
-      try {
-        console.log("📡 Sending Fetch Request...");
-        const response = await fetch(TRIP_JSON_URL);
+  useEffect(() => {
+    const loadTrips = async () => {
+      const trips = await fetchAndSortTrips();
+      setAllTrips(trips);
 
-        console.log("✅ Fetch Response Received:", response);
+      // Compute min/max dates for bounds
+      const allDates = trips.flatMap((t) => t.departures.map((d) => new Date(d.start_date)));
+      const min = allDates.length ? new Date(Math.min(...allDates)) : '';
+      const max = allDates.length ? new Date(Math.max(...allDates)) : '';
+      const fmt = (d) => d.toISOString().split('T')[0];
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log("✅ Fetch Success! JSON Data:", data);
-        setTrips(data);
-      } catch (err) {
-        console.error("❌ Fetch Error:", err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
+      setFilters((f) => ({ ...f, startDate: fmt(min), endDate: fmt(max) }));
+      setDateBounds({ min: fmt(min), max: fmt(max) });
     };
-
-    fetchTrips();
+    loadTrips();
   }, []);
 
-  if (loading) return <p className="text-center text-gray-500">Loading trips...</p>;
-  if (error) return <p className="text-center text-red-500">Error: {error}</p>;
+  useEffect(() => {
+    if (!allTrips.length) return;
+
+    const filtered = allTrips
+      .map((trip) => {
+        const matchingDepartures = trip.departures.filter((dep) => {
+          const depDate = new Date(dep.start_date);
+          const endDate = new Date(dep.end_date);
+          const duration = Math.floor((endDate - depDate) / (1000 * 60 * 60 * 24));
+          const cabinCount = dep.categories.reduce(
+            (sum, c) => (c.status === 'Available' ? sum + c.num_cabins : sum),
+            0
+          );
+
+          const matchesDuration =
+            filters.durations.length === 0 ||
+            filters.durations.some((label) => {
+              const range = durationRanges.find((r) => r.label === label);
+              return range && duration >= range.min && duration <= range.max;
+            });
+
+          return (
+            (!filters.startDate || depDate >= new Date(filters.startDate)) &&
+            (!filters.endDate || depDate <= new Date(filters.endDate)) &&
+            cabinCount >= filters.minCabins &&
+            (filters.ships.length === 0 || filters.ships.includes(dep.ship)) &&
+            matchesDuration
+          );
+        });
+
+        if (
+          !matchingDepartures.length ||
+          (filters.destinations.length > 0 &&
+            !trip.destinations?.split('|').some((d) => filters.destinations.includes(d.trim())))
+        ) {
+          return null;
+        }
+
+        return { ...trip, departures: matchingDepartures };
+      })
+      .filter(Boolean);
+
+    setFilteredTrips(filtered);
+  }, [allTrips, filters]);
+
+  const ships = [...new Set(allTrips.flatMap((t) => t.departures.map((d) => d.ship)))].sort();
+  const destinations = [...new Set(allTrips.flatMap((t) => t.destinations?.split('|').map((d) => d.trim()) || []))].sort();
+
+  // Handle loading state from Auth0
+  if (isLoading) return <div className="p-4">Loading authentication...</div>;
+
+  // If not logged in, redirect immediately
+  if (!isAuthenticated) {
+    loginWithRedirect();
+    return null;
+  }
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Available Trips</h1>
-      {trips.length === 0 ? (
-        <p className="text-center text-gray-500">No trips available.</p>
-      ) : (
-        <div className="space-y-4">
-          {trips.map((trip, index) => (
-            <details key={index} className="border p-4 rounded-lg">
-              <summary className="cursor-pointer text-lg font-semibold">
-                {trip.trip_name}
-              </summary>
-              <div className="mt-2">
-                <h3 className="font-semibold">Departure Dates:</h3>
-                <ul className="list-disc list-inside">
-                  {trip.departures.map((departure, depIndex) => (
-                    <li key={depIndex}>
-                      {departure.start_date} - {departure.end_date} ({departure.ship})
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </details>
+    <>
+      <header className="sticky top-0 z-10 bg-white border-b p-4 flex justify-between items-center shadow-sm">
+        <h1 className="text-xl font-bold text-gray-800">Lindblad Cruise Availability Finder</h1>
+        <div className="flex items-center gap-4">
+          <span className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full font-medium">
+            {filteredTrips.length} Trip{filteredTrips.length !== 1 ? 's' : ''} found
+          </span>
+          <button
+            className="bg-gray-100 hover:bg-gray-200 text-sm px-3 py-1 rounded"
+            onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+          >
+            Log out {user?.name && `(${user.name})`}
+          </button>
+        </div>
+      </header>
+
+      <div className="grid grid-cols-[250px_1fr] h-[calc(100vh-56px)] overflow-hidden">
+        <FilterSidebar
+          filters={filters}
+          onFilterChange={setFilters}
+          ships={ships}
+          destinations={destinations}
+          dateBounds={dateBounds}
+        />
+        <div className="p-4 space-y-4 overflow-y-auto">
+          {filteredTrips.map((trip, i) => (
+            <TripCard key={i} trip={trip} index={i} />
           ))}
         </div>
-      )}
+      </div>
+    </>
+  );
+}
+
+export default TripViewer;
+
+
+
+# FILE: src\components\CabinCategoryRow.jsx
+
+// src/components/CabinCategoryRow.jsx
+import React from 'react';
+
+function CabinCategoryRow({ category }) {
+  const fullPrice = category.price;
+  const discountPrice = category.price.startsWith('$')
+    ? `$${(parseFloat(category.price.replace(/[$,]/g, '')) * 0.05).toFixed(0)}`
+    : category.price;
+
+  const cabinNumbers = category.cabinNumbers
+    ? category.cabinNumbers.split('|').join(', ')
+    : '';
+
+  return (
+    <div className="grid grid-cols-[1fr_1fr_1fr_2fr_auto_auto] gap-x-4 items-center text-sm ml-4 py-0.5 border-b border-gray-200">
+      <span className="font-semibold">{category.category_name}</span>
+      <span className="text-gray-500 truncate">{category.deck}</span>
+      <span className="text-gray-700">{category.occupancy}</span>
+      <span className="text-gray-700 truncate">{cabinNumbers}</span>
+      <span className="text-gray-700">
+        {fullPrice} <span className="text-xs text-gray-400">({discountPrice})</span>
+      </span>
+      <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-xs text-center w-fit">
+        {category.num_cabins} cabins
+      </span>
     </div>
   );
 }
+
+export default CabinCategoryRow;
+
+
+
+# FILE: src\components\DepartureRow.jsx
+
+import React, { useRef, useState } from 'react';
+import { ChevronDown, ChevronRight, CalendarDays, Ship } from 'lucide-react';
+import CabinCategoryRow from './CabinCategoryRow';
+
+function DepartureRow({ departure }) {
+  const detailsRef = useRef(null);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const availableCats = departure.categories
+    .filter(cat => cat.status === 'Available')
+    .sort((a, b) => parseFloat(a.price.replace(/[$,]/g, '')) - parseFloat(b.price.replace(/[$,]/g, '')));
+
+  if (availableCats.length === 0) return null;
+
+  const totalAvailable = availableCats.reduce((sum, cat) => sum + cat.num_cabins, 0);
+
+  const departureDate = new Date(departure.start_date);
+  const endDate = new Date(departure.end_date);
+  const today = new Date();
+  const diffDays = Math.floor((departureDate - today) / (1000 * 60 * 60 * 24));
+  const cruiseDuration = Math.floor((endDate - departureDate) / (1000 * 60 * 60 * 24));
+
+  const dateDisplay = departureDate.toLocaleDateString(undefined, {
+    year: 'numeric', month: 'short', day: 'numeric'
+  });
+
+  const daysAwayClass = diffDays <= 30
+    ? 'text-green-700 bg-green-100 px-2 py-0.5 rounded-full text-xs'
+    : 'text-gray-500';
+
+  const handleToggle = () => {
+    setIsOpen(detailsRef.current?.open);
+  };
+
+  return (
+    <details
+      ref={detailsRef}
+      onToggle={handleToggle}
+      className="ml-4 mb-2 border border-gray-200 rounded"
+    >
+      <summary className="cursor-pointer p-2 grid grid-cols-[auto_1fr_auto_auto] items-center text-sm font-semibold border-b border-gray-300 gap-4 bg-gray-50">
+        {/* Chevron + Ship name (toggle only) */}
+        <div className="flex items-center gap-2">
+          <span className="w-4">
+            {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+          </span>
+          <span className="flex items-center gap-1 text-blue-600">
+            <Ship size={14} className="text-gray-400" />
+            {departure.ship}
+          </span>
+        </div>
+
+        {/* Date & Countdown */}
+        <div className="flex items-center justify-center gap-4 text-gray-700">
+          <span className="flex items-center gap-1">
+            <CalendarDays size={14} className="text-gray-400" />
+            {dateDisplay} ({cruiseDuration} days)
+          </span>
+          <span className={daysAwayClass} title={`Departs on ${departure.start_date}`}>
+            {diffDays} days away
+          </span>
+        </div>
+
+        {/* See Trip link */}
+        <div className="text-right pr-1">
+          <a
+            href={departure.booking_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="text-xs text-blue-600 hover:underline"
+          >
+            See Trip
+          </a>
+        </div>
+
+        {/* Cabin count */}
+        <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-xs whitespace-nowrap">
+          {totalAvailable} cabins available
+        </span>
+      </summary>
+
+      <div className="px-2 pb-2 space-y-1 transition-all duration-300 ease-in-out">
+        {availableCats.map((cat, i) => (
+          <CabinCategoryRow key={i} category={cat} />
+        ))}
+      </div>
+    </details>
+  );
+}
+
+export default DepartureRow;
+
+
+
+# FILE: src\components\FetchAndSortTrips.jsx
+
+// src/utils/fetchAndSortTrips.js
+
+export async function fetchAndSortTrips() {
+    const res = await fetch('https://da389rkfiajdk.cloudfront.net/trip_list.json');
+    const rawTrips = await res.json();
+  
+    const enrichedTrips = rawTrips.map((trip, tripIndex) => {
+      const availableDepartures = trip.departures.filter(dep =>
+        dep.categories.some(cat => cat.status === 'Available')
+      );
+  
+      const earliestDepartureDate = availableDepartures
+        .map(dep => new Date(dep.start_date))
+        .sort((a, b) => a - b)[0];
+  
+      return {
+        ...trip,
+        tripIndex,
+        availableDepartureCount: availableDepartures.length,
+        earliestDepartureDate,
+      };
+    }).sort((a, b) => {
+      const aHasDepartures = a.availableDepartureCount > 0;
+      const bHasDepartures = b.availableDepartureCount > 0;
+  
+      if (aHasDepartures !== bHasDepartures) {
+        return aHasDepartures ? -1 : 1;
+      }
+  
+      if (a.earliestDepartureDate && b.earliestDepartureDate) {
+        return new Date(a.earliestDepartureDate) - new Date(b.earliestDepartureDate);
+      }
+      return 0;
+    });
+  
+    return enrichedTrips;
+  }
+  
+
+
+
+# FILE: src\components\FilterSidebar.jsx
+
+import React from 'react';
+
+const durationRanges = [
+  { label: '1–4 days', min: 1, max: 4 },
+  { label: '5–7 days', min: 5, max: 7 },
+  { label: '8–14 days', min: 8, max: 14 },
+  { label: '15+ days', min: 15, max: Infinity },
+];
+
+function FilterSidebar({ filters, onFilterChange, ships, destinations, minStartDate, maxEndDate }) {
+  const handleChange = (e) => {
+    const { name, value, type, selectedOptions } = e.target;
+
+    if (type === 'select-multiple') {
+      const values = Array.from(selectedOptions).map((o) => o.value);
+      onFilterChange({ ...filters, [name]: values });
+    } else {
+      onFilterChange({ ...filters, [name]: value });
+    }
+  };
+
+  return (
+    <aside className="p-4 border-r border-gray-200 bg-white w-60 text-sm space-y-6 overflow-y-auto">
+      <div>
+        <label className="block font-medium mb-1">Start Date</label>
+        <input
+          type="date"
+          name="startDate"
+          value={filters.startDate}
+          onChange={handleChange}
+          min={minStartDate}
+          max={maxEndDate}
+          className="w-full border border-gray-300 rounded px-2 py-1"
+        />
+      </div>
+
+      <div>
+        <label className="block font-medium mb-1">End Date</label>
+        <input
+          type="date"
+          name="endDate"
+          value={filters.endDate}
+          onChange={handleChange}
+          min={filters.startDate || minStartDate}
+          max={maxEndDate}
+          className="w-full border border-gray-300 rounded px-2 py-1"
+        />
+      </div>
+
+      <div>
+        <label className="block font-medium mb-1">Destinations</label>
+        <select
+          name="destinations"
+          multiple
+          value={filters.destinations}
+          onChange={handleChange}
+          className="w-full border border-gray-300 rounded px-2 py-1 h-28"
+        >
+          {(destinations || []).map((dest) => (
+            <option key={dest} value={dest}>
+              {dest}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label className="block font-medium mb-1">Min Cabin Availability</label>
+        <input
+          type="number"
+          name="minCabins"
+          value={filters.minCabins}
+          onChange={handleChange}
+          className="w-full border border-gray-300 rounded px-2 py-1"
+          min={0}
+        />
+      </div>
+
+      <div>
+        <label className="block font-medium mb-1">Ships</label>
+        <select
+          name="ships"
+          multiple
+          value={filters.ships}
+          onChange={handleChange}
+          className="w-full border border-gray-300 rounded px-2 py-1 h-28"
+        >
+          {ships.map((ship) => (
+            <option key={ship} value={ship}>
+              {ship}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label className="block font-medium mb-1">Durations</label>
+        <select
+          name="durations"
+          multiple
+          value={filters.durations}
+          onChange={handleChange}
+          className="w-full border border-gray-300 rounded px-2 py-1 h-28"
+        >
+          {durationRanges.map((range) => (
+            <option key={range.label} value={range.label}>
+              {range.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="pt-6 border-t border-gray-200 space-y-2">
+        <button
+          type="button"
+          aria-label="Expand all trips and departures"
+          className="w-full text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded"
+          onClick={(e) => {
+            e.preventDefault();
+            document.querySelectorAll('details').forEach((el) => (el.open = true));
+          }}
+        >
+          Expand All
+        </button>
+
+        <button
+          type="button"
+          aria-label="Collapse all trips and departures"
+          className="w-full text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded"
+          onClick={(e) => {
+            e.preventDefault();
+            document.querySelectorAll('details').forEach((el) => (el.open = false));
+          }}
+        >
+          Collapse All
+        </button>
+
+        <button
+          type="button"
+          aria-label="Clear all filters"
+          className="w-full text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium px-3 py-1 rounded"
+          onClick={(e) => {
+            e.preventDefault();
+            onFilterChange({
+              startDate: minStartDate,
+              endDate: maxEndDate,
+              minCabins: 1,
+              ships: [],
+              durations: [],
+              destinations: [],
+            });
+          }}
+        >
+          Clear Filters
+        </button>
+      </div>
+    </aside>
+  );
+}
+
+export default FilterSidebar;
+
+
+
+# FILE: src\components\TripCard.jsx
+
+import React, { useRef, useState } from 'react';
+import { ChevronRight, ChevronDown } from 'lucide-react';
+import DepartureRow from './DepartureRow';
+
+function TripCard({ trip, index }) {
+  const detailsRef = useRef(null);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const formattedDate = new Date(trip.earliestDepartureDate).toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+
+  const handleToggle = () => {
+    setIsOpen(detailsRef.current?.open);
+  };
+
+  const tags = [...new Set(trip.destinations?.split('|').filter(Boolean))];
+
+  return (
+    <details
+      ref={detailsRef}
+      onToggle={handleToggle}
+      className={`rounded border ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} shadow-sm mb-3`}
+    >
+      <summary className="cursor-pointer p-3 flex justify-between items-start hover:bg-gray-100 transition">
+        {/* Left: Chevron + Trip Info */}
+        <div className="flex flex-1 items-start gap-2">
+          <span className="mt-1">
+            {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+          </span>
+          <div>
+            <span className="text-blue-700 hover:underline text-lg font-semibold">
+              {trip.trip_name}
+            </span>
+            <div className="flex flex-wrap gap-1 mt-1">
+              {tags.map((tag, i) => (
+                <span
+                  key={i}
+                  className="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Middle: Departure Info + See more */}
+        <div className="flex flex-col items-end text-sm text-gray-600 mr-4 w-48 shrink-0">
+          <div className="text-right">
+            {trip.availableDepartureCount} Departure
+            {trip.availableDepartureCount > 1 ? 's' : ''} • Next: {formattedDate}
+          </div>
+          <a
+            href={trip.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-blue-600 hover:underline mt-1"
+            onClick={(e) => e.stopPropagation()}
+          >
+            See more...
+          </a>
+        </div>
+
+        {/* Right: Image */}
+        {trip.image_url && (
+          <img
+            src={trip.image_url}
+            alt={trip.trip_name}
+            className="w-32 h-20 object-cover rounded shrink-0"
+            onClick={(e) => e.stopPropagation()}
+            onError={(e) => {
+              e.currentTarget.onerror = null; // prevent infinite loop
+              e.currentTarget.src = 'https://da389rkfiajdk.cloudfront.net/favicon.jpg';
+            }}
+          />
+        )}
+      </summary>
+
+      <div className="mt-2 mb-4 px-4">
+        {trip.departures.map((departure, i) => (
+          <DepartureRow key={i} departure={departure} />
+        ))}
+      </div>
+    </details>
+  );
+}
+
+export default TripCard;
 
 
 
