@@ -108,7 +108,7 @@ function TripViewer() {
   const destinations = [...new Set(allTrips.flatMap((t) => t.destinations?.split('|').map((d) => d.trim()) || []))].sort();
 
   // Handle loading state from Auth0
-  if (isLoading) return <div className="p-4">Loading authentication...</div>;
+  if (isLoading) return <div className="p-4">Authenticating...</div>;
 
   // If not logged in, redirect immediately
   if (!isAuthenticated) {
