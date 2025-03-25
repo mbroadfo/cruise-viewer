@@ -119,7 +119,17 @@ function TripViewer() {
   return (
     <>
       <header className="sticky top-0 z-10 bg-white border-b p-4 flex justify-between items-center shadow-sm">
-        <h1 className="text-xl font-bold text-gray-800">Lindblad Cruise Availability Finder</h1>
+        <div className="flex items-center gap-3">
+          <img
+            src="https://da389rkfiajdk.cloudfront.net/favicon.jpg"
+            alt="Lindblad logo"
+            className="w-8 h-8 rounded"
+          />
+          <h1 className="text-xl font-bold text-gray-800">
+            Lindblad Cruise Availability Finder
+          </h1>
+        </div>
+
         <div className="flex items-center gap-4">
           <span className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full font-medium">
             {filteredTrips.length} Trip{filteredTrips.length !== 1 ? 's' : ''} found
