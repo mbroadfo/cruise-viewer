@@ -37,10 +37,10 @@ function TripViewer() {
   
     if (!isAuthenticated) {
       console.log("🔁 Triggering login redirect...");
-      debugger; // <- Execution will pause here in dev tools
+      //debugger; // <- Execution will pause here in dev tools
       loginWithRedirect();
     }
-  }, [isLoading, isAuthenticated]);  
+  }, [isLoading, isAuthenticated, loginWithRedirect, user]);  
 
   useEffect(() => {
     const loadTrips = async () => {
