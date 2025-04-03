@@ -21,6 +21,51 @@ function FilterSidebar({ filters, onFilterChange, ships, destinations, minStartD
 
   return (
     <aside className="p-4 border-r border-gray-200 bg-white w-60 text-sm space-y-6 overflow-y-auto">
+      <div className="flex justify-between text-blue-600 text-xs font-medium border-b border-gray-200 pb-2">
+        <button
+          type="button"
+          aria-label="Expand all trips and departures"
+          className="hover:underline"
+          onClick={(e) => {
+            e.preventDefault();
+            document.querySelectorAll('details').forEach((el) => (el.open = true));
+          }}
+        >
+          Expand All
+        </button>
+
+        <button
+          type="button"
+          aria-label="Collapse all trips and departures"
+          className="hover:underline"
+          onClick={(e) => {
+            e.preventDefault();
+            document.querySelectorAll('details').forEach((el) => (el.open = false));
+          }}
+        >
+          Collapse All
+        </button>
+
+        <button
+          type="button"
+          aria-label="Clear all filters"
+          className="hover:underline"
+          onClick={(e) => {
+            e.preventDefault();
+            onFilterChange({
+              startDate: minStartDate,
+              endDate: maxEndDate,
+              minCabins: 1,
+              ships: [],
+              durations: [],
+              destinations: [],
+            });
+          }}
+        >
+          Clear Filters
+        </button>
+      </div>
+
       <div>
         <label className="block font-medium mb-1">Start Date</label>
         <input
@@ -108,51 +153,6 @@ function FilterSidebar({ filters, onFilterChange, ships, destinations, minStartD
             </option>
           ))}
         </select>
-      </div>
-
-      <div className="pt-6 border-t border-gray-200 space-y-2">
-        <button
-          type="button"
-          aria-label="Expand all trips and departures"
-          className="w-full text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded"
-          onClick={(e) => {
-            e.preventDefault();
-            document.querySelectorAll('details').forEach((el) => (el.open = true));
-          }}
-        >
-          Expand All
-        </button>
-
-        <button
-          type="button"
-          aria-label="Collapse all trips and departures"
-          className="w-full text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded"
-          onClick={(e) => {
-            e.preventDefault();
-            document.querySelectorAll('details').forEach((el) => (el.open = false));
-          }}
-        >
-          Collapse All
-        </button>
-
-        <button
-          type="button"
-          aria-label="Clear all filters"
-          className="w-full text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium px-3 py-1 rounded"
-          onClick={(e) => {
-            e.preventDefault();
-            onFilterChange({
-              startDate: minStartDate,
-              endDate: maxEndDate,
-              minCabins: 1,
-              ships: [],
-              durations: [],
-              destinations: [],
-            });
-          }}
-        >
-          Clear Filters
-        </button>
       </div>
     </aside>
   );
