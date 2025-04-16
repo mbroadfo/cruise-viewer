@@ -131,6 +131,14 @@ function TripViewer() {
         </div>
 
         <div className="flex items-center gap-4">
+          {user?.["https://cruise-viewer.app/roles"]?.role === "admin" && (
+            <a
+              href="/admin"
+              className="bg-green-100 hover:bg-green-200 text-green-800 text-sm px-3 py-1 rounded-full font-medium"
+            >
+              Administer
+            </a>
+          )}
           <span className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full font-medium">
             {filteredTrips.length} Trip{filteredTrips.length !== 1 ? 's' : ''} found
           </span>

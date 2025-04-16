@@ -1,7 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Auth0Provider } from "@auth0/auth0-react";
 import TripViewer from "./TripViewer.jsx";
+import PortalAdmin from "./pages/PortalAdmin.jsx";
 import "./index.css";
 import { config } from "./config";
 
@@ -18,7 +20,12 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       cacheLocation="localstorage"
       useRefreshTokens={true}
     >
-      <TripViewer />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<TripViewer />} />
+          <Route path="/admin" element={<PortalAdmin />} />
+        </Routes>
+      </BrowserRouter>
     </Auth0Provider>
   </React.StrictMode>
 );
