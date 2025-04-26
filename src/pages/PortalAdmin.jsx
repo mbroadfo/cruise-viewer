@@ -23,7 +23,7 @@ export default function PortalAdmin() {
     setError(null);
     try {
       const token = await getAccessTokenSilently();
-      const res = await fetch("https://jwkw1ft2g7.execute-api.us-west-2.amazonaws.com/admin-api/users", {
+      const res = await fetch("https://zf5sdrd108.execute-api.us-west-2.amazonaws.com/prod/admin-api/users", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
