@@ -24,25 +24,26 @@ export default function PortalAdmin() {
     try {
       const token = await getAccessTokenSilently();
       const res = await fetch("https://jwkw1ft2g7.execute-api.us-west-2.amazonaws.com/admin-api/users", {
+        method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
       });
   
       if (!res.ok) {
-        const text = await res.text();
-        throw new Error(`HTTP ${res.status}: ${text}`);
+        throw new Error(`HTTP error! Status: ${res.status}`);
       }
   
-      const json = await res.json();
-      setUsers(json.data.users);
+      const result = await res.json();
+      setUsers(result.data.users);  // << correct
     } catch (err) {
       console.error("List users failed:", err);
       setError("Failed to load users");
     } finally {
       setLoading(false);
     }
-  }; 
+  };  
 
   if (!isAuthenticated || !isAdmin) {
     return (
