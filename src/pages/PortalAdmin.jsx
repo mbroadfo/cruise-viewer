@@ -9,8 +9,9 @@ export default function PortalAdmin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const role = user?.["https://cruise-viewer.app/roles"]?.role;
+  const role = user && user["https://cruise-viewer.app/roles"]?.role;
   const isAdmin = isAuthenticated && role === "admin";
+  const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     if (isAuthenticated && !isAdmin) {
@@ -22,9 +23,14 @@ export default function PortalAdmin() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/list-users");
+      const token = await getAccessTokenSilently();
+      const res = await fetch("https://jwkw1ft2g7.execute-api.us-west-2.amazonaws.com/admin-api/users", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await res.json();
-      setUsers(data);
+      setUsers(data.users); // because Lambda returns { success: true, data: { users: [...] } }
     } catch (err) {
       console.error(err);
       setError("Failed to load users");
