@@ -3,7 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function PortalAdmin() {
-  const { user, isAuthenticated, logout } = useAuth0();
+  const { user, isAuthenticated, logout, getAccessTokenSilently } = useAuth0();
   const navigate = useNavigate();
   const [users, setUsers] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -11,7 +11,6 @@ export default function PortalAdmin() {
 
   const role = user && user["https://cruise-viewer.app/roles"]?.role;
   const isAdmin = isAuthenticated && role === "admin";
-  const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     if (isAuthenticated && !isAdmin) {
@@ -24,13 +23,14 @@ export default function PortalAdmin() {
     setError(null);
     try {
       const token = await getAccessTokenSilently();
-      const res = await fetch("https://jwkw1ft2g7.execute-api.us-west-2.amazonaws.com/admin-api/users", {
+      const res = await fetch("/api/admin-api/users", {    // use relative path
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
       const data = await res.json();
-      setUsers(data.users); // because Lambda returns { success: true, data: { users: [...] } }
+      setUsers(data.data.users);   // Lambda wraps users under "data"
     } catch (err) {
       console.error(err);
       setError("Failed to load users");
