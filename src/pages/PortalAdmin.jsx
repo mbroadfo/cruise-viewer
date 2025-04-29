@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate, Link } from "react-router-dom";
+import ListUsers from "../components/ListUsers";
 
 export default function PortalAdmin() {
   const { user, isAuthenticated, logout } = useAuth0();
@@ -8,6 +9,7 @@ export default function PortalAdmin() {
   const [users, setUsers] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedCommand, setSelectedCommand] = useState(null);
 
   const role = user && user["https://cruise-viewer.app/roles"]?.role;
   const isAdmin = isAuthenticated && role === "admin";
@@ -53,32 +55,18 @@ export default function PortalAdmin() {
   }
 
   return (
-    <div className="p-8 flex justify-center items-center min-h-screen bg-gray-50">
-      <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 w-full max-w-md space-y-6">
+    <div className="p-8 flex min-h-screen bg-gray-50 space-x-6">
+      {/* Left Navigation */}
+      <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 w-64 space-y-4">
         <h1 className="text-2xl font-bold text-center">Portal Admin</h1>
-
-        <div className="space-y-3 text-center">
-          <button className="w-full bg-blue-100 hover:bg-blue-200 px-4 py-2 rounded" onClick={() => alert("Invite logic coming soon")}>Invite User</button>
-          <button className="w-full bg-yellow-100 hover:bg-yellow-200 px-4 py-2 rounded" onClick={listUsers}>List Users</button>
-          <button className="w-full bg-red-100 hover:bg-red-200 px-4 py-2 rounded" onClick={() => alert("Delete logic coming soon")}>Delete User</button>
+  
+        <div className="flex flex-col space-y-3 pt-6">
+          <button className="bg-blue-100 hover:bg-blue-200 px-4 py-2 rounded" onClick={() => setSelectedCommand("invite")}>Invite User</button>
+          <button className="bg-yellow-100 hover:bg-yellow-200 px-4 py-2 rounded" onClick={() => setSelectedCommand("list")}>List Users</button>
+          <button className="bg-red-100 hover:bg-red-200 px-4 py-2 rounded" onClick={() => setSelectedCommand("delete")}>Delete User</button>
         </div>
-
-        {loading && <p className="text-sm text-gray-500 text-center">Loading users...</p>}
-        {error && <p className="text-sm text-red-500 text-center">{error}</p>}
-
-        {users && (
-          <div className="mt-4 text-left space-y-2 max-h-64 overflow-y-auto border-t pt-4 text-sm">
-            {users.map((u) => (
-              <div key={u.user_id} className="border-b pb-2">
-                <div><strong>Email:</strong> {u.email}</div>
-                <div><strong>Name:</strong> {u.name || "(no name)"}</div>
-                <div><strong>Role:</strong> {u.app_metadata?.role || "(none)"}</div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        <div className="pt-4 border-t border-gray-100 space-y-2 text-center">
+  
+        <div className="pt-6 border-t border-gray-100 text-center space-y-2">
           <Link to="/" className="inline-block text-blue-600 hover:underline text-sm">
             ← Back to Trips
           </Link>
@@ -91,6 +79,33 @@ export default function PortalAdmin() {
           </button>
         </div>
       </div>
+  
+      {/* Right Content */}
+      <div className="flex-1 bg-white border border-gray-200 rounded-xl shadow-sm p-6">
+        {selectedCommand === "list" && (
+          <>
+            <h2 className="text-xl font-semibold mb-4">User List</h2>
+  
+            <button className="mb-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded" onClick={listUsers}>
+              Refresh Users
+            </button>
+  
+            {loading && <p className="text-gray-500">Loading users...</p>}
+            {error && <p className="text-red-500">{error}</p>}
+  
+            {users && <ListUsers users={users} />}
+
+          </>
+        )}
+  
+        {selectedCommand === "invite" && (
+          <div className="text-center text-gray-500">Invite User - coming soon</div>
+        )}
+  
+        {selectedCommand === "delete" && (
+          <div className="text-center text-gray-500">Delete User - coming soon</div>
+        )}
+      </div>
     </div>
-  );
+  );  
 }
