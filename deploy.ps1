@@ -3,7 +3,7 @@
 # === CONFIG ===
 $bucket = "mytripdata8675309"
 $distributionId = "E22G95LIEIJY6O"
-$pathsToInvalidate = @("/index.html", "/trip_list.json")
+$pathsToInvalidate = @("/index.html", "/trip_list.json", "/admin-api/*")
 
 Write-Host "Step 1: Building the app..."
 npm run build
