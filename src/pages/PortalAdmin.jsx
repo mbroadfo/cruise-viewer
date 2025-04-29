@@ -22,7 +22,7 @@ export default function PortalAdmin() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("https://zf5sdrd108.execute-api.us-west-2.amazonaws.com/prod/admin-api/users", {
+      const res = await fetch("https://da389rkfiajdk.cloudfront.net/prod/admin-api/users", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
