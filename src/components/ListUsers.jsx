@@ -1,19 +1,34 @@
 import React from "react";
 
 export default function ListUsers({ users }) {
-  if (!users || users.length === 0) {
-    return <p className="text-sm text-gray-500 text-center">No users found.</p>;
-  }
-
   return (
-    <div className="mt-4 text-left space-y-2 max-h-64 overflow-y-auto border-t pt-4 text-sm">
-      {users.map((u) => (
-        <div key={u.user_id} className="border-b pb-2">
-          <div><strong>Email:</strong> {u.email}</div>
-          <div><strong>Name:</strong> {u.name || "(no name)"}</div>
-          <div><strong>Role:</strong> {u.app_metadata?.role || "(none)"}</div>
-        </div>
-      ))}
+    <div className="overflow-x-auto">
+      <table className="table-auto w-full border-collapse text-sm">
+        <thead>
+          <tr className="bg-gray-100 border-b">
+            <th className="px-4 py-2 text-left">Email</th>
+            <th className="px-4 py-2 text-left">Name</th>
+            <th className="px-4 py-2 text-left">Role</th>
+            <th className="px-4 py-2 text-left">User ID</th>
+            <th className="px-4 py-2 text-left">Verified</th>
+            <th className="px-4 py-2 text-left">Login Count</th>
+            <th className="px-4 py-2 text-left">Last Login</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((u) => (
+            <tr key={u.user_id} className="border-b hover:bg-gray-50">
+              <td className="px-4 py-2">{u.email}</td>
+              <td className="px-4 py-2">{`${u.given_name || ""} ${u.family_name || ""}`.trim()}</td>
+              <td className="px-4 py-2">{u.app_metadata?.role || ""}</td>
+              <td className="px-4 py-2 font-mono text-xs break-all">{u.user_id}</td>
+              <td className="px-4 py-2">{u.email_verified ? "Yes" : "No"}</td>
+              <td className="px-4 py-2">{u.logins_count ?? "-"}</td>
+              <td className="px-4 py-2 whitespace-nowrap">{u.last_login ? new Date(u.last_login).toLocaleString() : "-"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

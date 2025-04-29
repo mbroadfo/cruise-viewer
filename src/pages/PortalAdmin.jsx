@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate, Link } from "react-router-dom";
 import ListUsers from "../components/ListUsers";
+import InviteUser from "../components/InviteUser";
+import DeleteUser from "../components/DeleteUser";
+
 
 export default function PortalAdmin() {
   const { user, isAuthenticated, logout } = useAuth0();
@@ -19,6 +22,12 @@ export default function PortalAdmin() {
       navigate("/");
     }
   }, [isAuthenticated, isAdmin, navigate]);
+
+  useEffect(() => {
+    if (selectedCommand === "list") {
+      listUsers();
+    }
+  }, [selectedCommand]);  
 
   const listUsers = async () => {
     setLoading(true);
@@ -81,31 +90,32 @@ export default function PortalAdmin() {
       </div>
   
       {/* Right Content */}
-      <div className="flex-1 bg-white border border-gray-200 rounded-xl shadow-sm p-6">
-        {selectedCommand === "list" && (
-          <>
-            <h2 className="text-xl font-semibold mb-4">User List</h2>
-  
-            <button className="mb-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded" onClick={listUsers}>
-              Refresh Users
-            </button>
-  
-            {loading && <p className="text-gray-500">Loading users...</p>}
-            {error && <p className="text-red-500">{error}</p>}
-  
-            {users && <ListUsers users={users} />}
+      {selectedCommand && (
+        <div className="flex-1 bg-white border border-gray-200 rounded-xl shadow-sm p-6">
+          {selectedCommand === "list" && (
+            <>
+              <h2 className="text-xl font-semibold mb-4">User List</h2>
+              {loading && <p className="text-gray-500">Loading users...</p>}
+              {error && <p className="text-red-500">{error}</p>}
+              {users && <ListUsers users={users} />}
+            </>
+          )}
 
-          </>
-        )}
-  
-        {selectedCommand === "invite" && (
-          <div className="text-center text-gray-500">Invite User - coming soon</div>
-        )}
-  
-        {selectedCommand === "delete" && (
-          <div className="text-center text-gray-500">Delete User - coming soon</div>
-        )}
-      </div>
+          {selectedCommand === "invite" && (
+            <>
+              <h2 className="text-xl font-semibold mb-4">Invite a New User</h2>
+              <InviteUser />
+            </>
+          )}
+
+          {selectedCommand === "delete" && (
+            <>
+              <h2 className="text-xl font-semibold mb-4">Delete a User</h2>
+              <DeleteUser />
+            </>
+          )}
+        </div>
+      )}
     </div>
   );  
 }
