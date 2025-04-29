@@ -17,14 +17,16 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         audience: config.auth0.audience,
         scope: "openid profile email offline_access",
       }}
-      cacheLocation="localstorage"
+      cacheLocation="memory"
       useRefreshTokens={true}
     >
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<TripViewer />} />
-          <Route path="/admin" element={<PortalAdmin />} />
-        </Routes>
+        <ErrorBoundary fallback={<div style={{color: 'white'}}>Error occurred</div>}>
+          <Routes>
+            <Route path="/" element={<TripViewer />} />
+            <Route path="/admin" element={<PortalAdmin />} />
+          </Routes>
+        </ErrorBoundary>
       </BrowserRouter>
     </Auth0Provider>
   </React.StrictMode>
