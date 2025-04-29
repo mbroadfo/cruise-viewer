@@ -3,7 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function PortalAdmin() {
-  const { user, isAuthenticated, logout, getAccessTokenSilently } = useAuth0();
+  const { user, isAuthenticated, logout } = useAuth0();
   const navigate = useNavigate();
   const [users, setUsers] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -22,28 +22,26 @@ export default function PortalAdmin() {
     setLoading(true);
     setError(null);
     try {
-      const token = await getAccessTokenSilently();
       const res = await fetch("https://zf5sdrd108.execute-api.us-west-2.amazonaws.com/prod/admin-api/users", {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
-  
+
       if (!res.ok) {
         throw new Error(`HTTP error! Status: ${res.status}`);
       }
-  
+
       const result = await res.json();
-      setUsers(result.data.users);  // << correct
+      setUsers(result.data.users);
     } catch (err) {
       console.error("List users failed:", err);
       setError("Failed to load users");
     } finally {
       setLoading(false);
     }
-  };  
+  };
 
   if (!isAuthenticated || !isAdmin) {
     return (
