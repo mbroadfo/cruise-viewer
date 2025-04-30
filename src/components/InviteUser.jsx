@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function InviteUser() {
   const [email, setEmail] = useState("");
@@ -6,6 +7,7 @@ export default function InviteUser() {
   const [familyName, setFamilyName] = useState("");
   const [status, setStatus] = useState(null);
   const [error, setError] = useState(null);
+  const { getAccessTokenSilently } = useAuth0();
 
   const handleInvite = async (e) => {
     e.preventDefault();
@@ -13,10 +15,15 @@ export default function InviteUser() {
     setError(null);
 
     try {
+      const token = await getAccessTokenSilently({
+        audience: "https://dev-jdsnf3lqod8nxlnv.us.auth0.com/api/v2/",
+      });
+
       const res = await fetch("https://da389rkfiajdk.cloudfront.net/prod/admin-api/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           email,

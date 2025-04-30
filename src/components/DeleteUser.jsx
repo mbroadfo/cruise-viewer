@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function DeleteUser() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState(null);
   const [error, setError] = useState(null);
+  const { getAccessTokenSilently } = useAuth0();
 
   const handleDelete = async (e) => {
     e.preventDefault();
@@ -11,10 +13,15 @@ export default function DeleteUser() {
     setError(null);
 
     try {
+      const token = await getAccessTokenSilently({
+        audience: "https://dev-jdsnf3lqod8nxlnv.us.auth0.com/api/v2/",
+      });
+
       const res = await fetch("https://da389rkfiajdk.cloudfront.net/prod/admin-api/users", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({ email }),
       });

@@ -1,6 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useAccessToken } from "../lib/admin-api";
 
-export default function ListUsers({ users }) {
+export default function ListUsersWrapper() {
+  const { getCachedAccessToken } = useAccessToken();
+  const [users, setUsers] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const token = await getCachedAccessToken();
+
+        const res = await fetch("https://jwkw1ft2g7.execute-api.us-west-2.amazonaws.com/admin-api/users", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch users");
+        }
+
+        const data = await res.json();
+        setUsers(data.data.users || []);
+      } catch (err) {
+        setError(`❌ Failed to load users: ${err.message}`);
+      }
+    };
+
+    fetchUsers();
+  }, [getCachedAccessToken]);
+
+  if (error) return <p className="text-red-600 text-sm">{error}</p>;
+
+  return <ListUsers users={users} />;
+}
+
+function ListUsers({ users }) {
   return (
     <div className="overflow-x-auto">
       <table className="table-auto w-full border-collapse text-sm">
