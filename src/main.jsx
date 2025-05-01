@@ -14,7 +14,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       clientId={config.auth0.clientId}
       authorizationParams={{
         redirect_uri: window.location.origin,
-        audience: 'https://cruise-admin-api',
+        audience: config.auth0.audience,
         scope: "openid profile email offline_access",
       }}
       cacheLocation="localstorage"
