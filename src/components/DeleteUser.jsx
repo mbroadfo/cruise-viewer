@@ -16,7 +16,7 @@ export default function DeleteUser() {
     try {
       const apiToken = await getCachedAccessToken();
 
-      const res = await fetch("https://jwkw1ft2g7.execute-api.us-west-2.amazonaws.com/prod/admin-api/users", {
+      const res = await fetch("https://zf5sdrd108.execute-api.us-west-2.amazonaws.com/prod/admin-api/users", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

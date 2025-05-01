@@ -17,7 +17,7 @@ export default function ListUsers() {
         if (!apiToken) throw new Error("No token available");
 
         const response = await fetch(
-          "https://jwkw1ft2g7.execute-api.us-west-2.amazonaws.com/prod/admin-api/users",
+          "https://zf5sdrd108.execute-api.us-west-2.amazonaws.com/prod/admin-api/users",
           {
             method: "GET",
             headers: {
