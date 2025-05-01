@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useAccessToken } from "../lib/admin-api";
-import { getManagementToken } from "../../backend/token-utils";
 
 export default function InviteUser() {
   const { getCachedAccessToken } = useAccessToken();
@@ -17,17 +16,13 @@ export default function InviteUser() {
     setError(null);
 
     try {
-      const [apiToken, mgmtToken] = await Promise.all([
-        getCachedAccessToken(),
-        getManagementToken(),
-      ]);
+      const apiToken = await getCachedAccessToken();
 
       const res = await fetch("https://jwkw1ft2g7.execute-api.us-west-2.amazonaws.com/admin-api/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${apiToken}`,
-          "X-Management-Token": mgmtToken,
         },
         body: JSON.stringify({
           email,

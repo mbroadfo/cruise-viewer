@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { getManagementToken } from "../../backend/token-utils";
 import { useAccessToken } from "../lib/admin-api";
 
 export default function DeleteUser() {
@@ -15,17 +14,13 @@ export default function DeleteUser() {
     setError(null);
 
     try {
-      const [apiToken, mgmtToken] = await Promise.all([
-        getCachedAccessToken(),
-        getManagementToken(),
-      ]);
+      const apiToken = await getCachedAccessToken();
 
       const res = await fetch("https://jwkw1ft2g7.execute-api.us-west-2.amazonaws.com/admin-api/users", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${apiToken}`,
-          "X-Management-Token": mgmtToken,
         },
         body: JSON.stringify({ email }),
       });

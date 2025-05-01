@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import ListUsers from "./ListUsers";
-import { getManagementToken } from "../../backend/token-utils";
 import { useAccessToken } from "../lib/admin-api";
 
 
-export default function ListUsersContainer() {
+export default function ListUsers() {
   const { getCachedAccessToken } = useAccessToken(); // ✅ moved here
 
   const [users, setUsers] = useState([]);
@@ -16,10 +14,7 @@ export default function ListUsersContainer() {
       setLoading(true);
       setError(null);
       try {
-        const [apiToken, mgmtToken] = await Promise.all([
-          getCachedAccessToken(),
-          getManagementToken(),
-        ]);
+        const apiToken = await getCachedAccessToken();
 
         const response = await fetch(
           "https://jwkw1ft2g7.execute-api.us-west-2.amazonaws.com/admin-api/users",
@@ -27,7 +22,6 @@ export default function ListUsersContainer() {
             method: "GET",
             headers: {
               Authorization: `Bearer ${apiToken}`,
-              "X-Management-Token": mgmtToken,
               "Content-Type": "application/json",
             },
           }
