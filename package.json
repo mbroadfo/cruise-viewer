@@ -12,6 +12,7 @@
   "dependencies": {
     "@auth0/auth0-react": "^2.3.0",
     "@aws-sdk/client-s3": "^3.758.0",
+    "@aws-sdk/client-secrets-manager": "^3.799.0",
     "lucide-react": "^0.483.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

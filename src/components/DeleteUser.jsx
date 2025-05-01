@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { getManagementToken } from "../lib/token-utils";
+import { getManagementToken } from "../../backend/token-utils";
 import { getCachedAccessToken } from "../lib/admin-api";
 
 export default function DeleteUser() {

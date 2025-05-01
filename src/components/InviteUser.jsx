@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { getCachedAccessToken } from "../lib/admin-api";
-import { getManagementToken } from "../lib/token-utils";
+import { getManagementToken } from "../../backend/token-utils";
 
 export default function InviteUser() {
   const [email, setEmail] = useState("");

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ListUsers from "./ListUsers";
-import { getManagementToken } from "../lib/token-utils";
+import { getManagementToken } from "../../backend/token-utils";
 import { getCachedAccessToken } from "../lib/admin-api";
 
 export default function ListUsersContainer() {
