@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useAccessToken } from "../lib/admin-api";
-import ForceReLogin from "./ForceRelogin";
 
 export default function ListUsers() {
   const { getCachedAccessToken, forceReLogin } = useAccessToken();

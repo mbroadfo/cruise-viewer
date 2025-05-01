@@ -36,7 +36,6 @@ export default function PortalAdmin() {
             authorizationParams: {
               audience: "https://cruise-admin-api",
               scope: "openid profile email offline_access",
-              prompt: "consent"
             },
             appState: { returnTo: "/admin" }
           });
