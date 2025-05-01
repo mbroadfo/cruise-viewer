@@ -6,7 +6,7 @@ export function useAccessToken() {
   const getCachedAccessToken = async () => {
     return await getAccessTokenSilently({
       authorizationParams: {
-        audience: 'https://jwkw1ft2g7.execute-api.us-west-2.amazonaws.com',
+        audience: 'https://https://cruise-admin-api',
       },
     });
   };

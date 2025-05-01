@@ -17,7 +17,7 @@ export default function ListUsers() {
         const apiToken = await getCachedAccessToken();
 
         const response = await fetch(
-          "https://jwkw1ft2g7.execute-api.us-west-2.amazonaws.com/admin-api/users",
+          "https://https://cruise-admin-api/admin-api/users",
           {
             method: "GET",
             headers: {
