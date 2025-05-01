@@ -18,7 +18,7 @@ export default function InviteUser() {
     try {
       const apiToken = await getCachedAccessToken();
 
-      const res = await fetch("https://jwkw1ft2g7.execute-api.us-west-2.amazonaws.com/prod/admin-api/users", {
+      const res = await fetch("https://da389rkfiajdk.cloudfront.net/admin/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
