@@ -15,6 +15,7 @@ export default function ListUsers() {
       setError(null);
       try {
         const apiToken = await getCachedAccessToken();
+        console.log("Access token:", apiToken);
 
         const response = await fetch(
           "https://jwkw1ft2g7.execute-api.us-west-2.amazonaws.com/prod/admin-api/users",
