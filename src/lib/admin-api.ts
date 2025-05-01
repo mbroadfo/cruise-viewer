@@ -1,24 +1,27 @@
 import { useAuth0 } from "@auth0/auth0-react";
+import { useCallback } from "react";
 
-function useAccessToken() {
+export function useAccessToken() {
   const { getAccessTokenSilently, loginWithRedirect } = useAuth0();
 
-  const getCachedAccessToken = async () => {
+  const getCachedAccessToken = useCallback(async () => {
     try {
-      return await getAccessTokenSilently({
+      const token = await getAccessTokenSilently({
         authorizationParams: {
           audience: "https://cruise-admin-api",
         },
       });
-    } catch (err) {
-      if (err.error === "missing_refresh_token" || err.error === "login_required") {
-        // Prompt the user to log in again
-        await loginWithRedirect();
-      } else {
-        throw err;
-      }
+      return token;
+    } catch (err: any) {
+      console.error("🔒 Auth error while fetching token:", err);
+      // Don't auto-redirect, let the component decide what to do
+      throw err;
     }
-  };
+  }, [getAccessTokenSilently, loginWithRedirect]);
 
-  return { getCachedAccessToken };
+  const forceReLogin = useCallback(async () => {
+    await loginWithRedirect();
+  }, [loginWithRedirect]);
+
+  return { getCachedAccessToken, forceReLogin };
 }

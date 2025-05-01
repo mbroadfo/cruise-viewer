@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useAccessToken } from "../lib/admin-api";
 import ForceReLogin from "./ForceRelogin";
 
-
 export default function ListUsers() {
-  const { getCachedAccessToken } = useAccessToken(); // ✅ moved here
+  const { getCachedAccessToken, forceReLogin } = useAccessToken();
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,7 +15,7 @@ export default function ListUsers() {
       setError(null);
       try {
         const apiToken = await getCachedAccessToken();
-        console.log("Access token:", apiToken);
+        if (!apiToken) throw new Error("No token available");
 
         const response = await fetch(
           "https://jwkw1ft2g7.execute-api.us-west-2.amazonaws.com/prod/admin-api/users",
@@ -36,17 +35,30 @@ export default function ListUsers() {
         const data = await response.json();
         setUsers(data);
       } catch (err) {
-        setError(`❌ Failed to load users: ${err.message}`);
+        console.error("User fetch failed:", err);
+        setError(err.message);
       } finally {
         setLoading(false);
       }
     };
 
     fetchUsers();
-  }, [getCachedAccessToken]); // good practice to include hook return in deps
+  }, [getCachedAccessToken]);
 
   if (loading) return <p>Loading users...</p>;
-  if (error) return <p className="text-red-600 text-sm">{error}</p>;
+
+  if (error?.includes("login_required") || error?.includes("consent_required")) {
+    return (
+      <div>
+        <p className="text-red-600 text-sm">⚠️ Login required to access admin panel.</p>
+        <button onClick={forceReLogin} className="text-blue-600 underline">
+          Click here to log in again
+        </button>
+      </div>
+    );
+  }
+
+  if (error) return <p className="text-red-600 text-sm">❌ {error}</p>;
 
   return <ListUsers users={users} />;
 }
