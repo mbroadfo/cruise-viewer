@@ -9,9 +9,6 @@ import DeleteUser from "../components/DeleteUser";
 export default function PortalAdmin() {
   const { user, isAuthenticated, logout } = useAuth0();
   const navigate = useNavigate();
-  const [users, setUsers] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [selectedCommand, setSelectedCommand] = useState(null);
 
   const role = user && user["https://cruise-viewer.app/roles"]?.role;
@@ -24,35 +21,10 @@ export default function PortalAdmin() {
   }, [isAuthenticated, isAdmin, navigate]);
 
   useEffect(() => {
-    if (selectedCommand === "list") {
-      listUsers();
+    if (isAuthenticated && !isAdmin) {
+      navigate("/");
     }
-  }, [selectedCommand]);  
-
-  const listUsers = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("https://da389rkfiajdk.cloudfront.net/prod/admin-api/users", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`);
-      }
-
-      const result = await res.json();
-      setUsers(result.data.users);
-    } catch (err) {
-      console.error("List users failed:", err);
-      setError("Failed to load users");
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [isAuthenticated, isAdmin, navigate]); 
 
   if (!isAuthenticated || !isAdmin) {
     return (
@@ -95,9 +67,7 @@ export default function PortalAdmin() {
           {selectedCommand === "list" && (
             <>
               <h2 className="text-xl font-semibold mb-4">User List</h2>
-              {loading && <p className="text-gray-500">Loading users...</p>}
-              {error && <p className="text-red-500">{error}</p>}
-              {users && <ListUsers users={users} />}
+              import ListUsersContainer from "../components/ListUsersContainer";
             </>
           )}
 

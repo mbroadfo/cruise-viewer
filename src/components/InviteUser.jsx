@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
+import { getCachedAccessToken } from "../lib/admin-api";
+import { getManagementToken } from "../lib/token-utils";
 
 export default function InviteUser() {
   const [email, setEmail] = useState("");
@@ -7,7 +8,6 @@ export default function InviteUser() {
   const [familyName, setFamilyName] = useState("");
   const [status, setStatus] = useState(null);
   const [error, setError] = useState(null);
-  const { getAccessTokenSilently } = useAuth0();
 
   const handleInvite = async (e) => {
     e.preventDefault();
@@ -15,15 +15,17 @@ export default function InviteUser() {
     setError(null);
 
     try {
-      const token = await getAccessTokenSilently({
-        audience: "https://dev-jdsnf3lqod8nxlnv.us.auth0.com/api/v2/",
-      });
+      const [apiToken, mgmtToken] = await Promise.all([
+        getCachedAccessToken(),
+        getManagementToken()
+      ]);
 
-      const res = await fetch("https://da389rkfiajdk.cloudfront.net/prod/admin-api/users", {
+      const res = await fetch("https://jwkw1ft2g7.execute-api.us-west-2.amazonaws.com/admin-api/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${apiToken}`,
+          "X-Management-Token": mgmtToken,
         },
         body: JSON.stringify({
           email,
