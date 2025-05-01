@@ -5,9 +5,8 @@ import ListUsers from "../components/ListUsers";
 import InviteUser from "../components/InviteUser";
 import DeleteUser from "../components/DeleteUser";
 
-
 export default function PortalAdmin() {
-  const { user, isAuthenticated, logout } = useAuth0();
+  const { user, isAuthenticated, logout, getAccessTokenSilently, loginWithRedirect } = useAuth0();
   const navigate = useNavigate();
   const [selectedCommand, setSelectedCommand] = useState(null);
 
@@ -20,11 +19,33 @@ export default function PortalAdmin() {
     }
   }, [isAuthenticated, isAdmin, navigate]);
 
+  // 🔐 Ensure admin token exists
   useEffect(() => {
-    if (isAuthenticated && !isAdmin) {
-      navigate("/");
-    }
-  }, [isAuthenticated, isAdmin, navigate]); 
+    const ensureAdminToken = async () => {
+      if (isAdmin) {
+        try {
+          await getAccessTokenSilently({
+            authorizationParams: {
+              audience: "https://cruise-admin-api",
+              scope: "openid profile email offline_access"
+            }
+          });
+        } catch (err) {
+          console.warn("🔁 Admin token missing, redirecting to login with correct audience", err);
+          await loginWithRedirect({
+            authorizationParams: {
+              audience: "https://cruise-admin-api",
+              scope: "openid profile email offline_access",
+              prompt: "consent"
+            },
+            appState: { returnTo: "/admin" }
+          });
+        }
+      }
+    };
+
+    ensureAdminToken();
+  }, [isAdmin, getAccessTokenSilently, loginWithRedirect]);
 
   if (!isAuthenticated || !isAdmin) {
     return (
@@ -40,13 +61,13 @@ export default function PortalAdmin() {
       {/* Left Navigation */}
       <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 w-64 space-y-4">
         <h1 className="text-2xl font-bold text-center">Portal Admin</h1>
-  
+
         <div className="flex flex-col space-y-3 pt-6">
           <button className="bg-blue-100 hover:bg-blue-200 px-4 py-2 rounded" onClick={() => setSelectedCommand("invite")}>Invite User</button>
           <button className="bg-yellow-100 hover:bg-yellow-200 px-4 py-2 rounded" onClick={() => setSelectedCommand("list")}>List Users</button>
           <button className="bg-red-100 hover:bg-red-200 px-4 py-2 rounded" onClick={() => setSelectedCommand("delete")}>Delete User</button>
         </div>
-  
+
         <div className="pt-6 border-t border-gray-100 text-center space-y-2">
           <Link to="/" className="inline-block text-blue-600 hover:underline text-sm">
             ← Back to Trips
@@ -60,7 +81,7 @@ export default function PortalAdmin() {
           </button>
         </div>
       </div>
-  
+
       {/* Right Content */}
       {selectedCommand && (
         <div className="flex-1 bg-white border border-gray-200 rounded-xl shadow-sm p-6">
@@ -70,14 +91,12 @@ export default function PortalAdmin() {
               <ListUsers />
             </>
           )}
-
           {selectedCommand === "invite" && (
             <>
               <h2 className="text-xl font-semibold mb-4">Invite a New User</h2>
               <InviteUser />
             </>
           )}
-
           {selectedCommand === "delete" && (
             <>
               <h2 className="text-xl font-semibold mb-4">Delete a User</h2>
@@ -87,5 +106,5 @@ export default function PortalAdmin() {
         </div>
       )}
     </div>
-  );  
+  );
 }
