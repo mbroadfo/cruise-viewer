@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate, Link } from "react-router-dom";
+import ListUsersContainer from "../components/ListUsersContainer";
 import ListUsers from "../components/ListUsers";
 import InviteUser from "../components/InviteUser";
 import DeleteUser from "../components/DeleteUser";
@@ -67,7 +68,7 @@ export default function PortalAdmin() {
           {selectedCommand === "list" && (
             <>
               <h2 className="text-xl font-semibold mb-4">User List</h2>
-              import ListUsersContainer from "../components/ListUsersContainer";
+              <ListUsersContainer />
             </>
           )}
 

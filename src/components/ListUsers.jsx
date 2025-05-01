@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import ListUsers from "./ListUsers";
 import { getManagementToken } from "../../backend/token-utils";
-import { getCachedAccessToken } from "../lib/admin-api";
+import { useAccessToken } from "../lib/admin-api";
+
 
 export default function ListUsersContainer() {
+  const { getCachedAccessToken } = useAccessToken(); // ✅ moved here
+
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -44,7 +47,7 @@ export default function ListUsersContainer() {
     };
 
     fetchUsers();
-  }, []);
+  }, [getCachedAccessToken]); // good practice to include hook return in deps
 
   if (loading) return <p>Loading users...</p>;
   if (error) return <p className="text-red-600 text-sm">{error}</p>;

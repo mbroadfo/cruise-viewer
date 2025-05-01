@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { getCachedAccessToken } from "../lib/admin-api";
+import { useAccessToken } from "../lib/admin-api";
 import { getManagementToken } from "../../backend/token-utils";
 
 export default function InviteUser() {
+  const { getCachedAccessToken } = useAccessToken();
+
   const [email, setEmail] = useState("");
   const [givenName, setGivenName] = useState("");
   const [familyName, setFamilyName] = useState("");
@@ -17,7 +19,7 @@ export default function InviteUser() {
     try {
       const [apiToken, mgmtToken] = await Promise.all([
         getCachedAccessToken(),
-        getManagementToken()
+        getManagementToken(),
       ]);
 
       const res = await fetch("https://jwkw1ft2g7.execute-api.us-west-2.amazonaws.com/admin-api/users", {
