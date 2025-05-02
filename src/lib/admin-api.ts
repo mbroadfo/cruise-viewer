@@ -17,7 +17,7 @@ export function useAccessToken() {
       // Don't auto-redirect, let the component decide what to do
       throw err;
     }
-  }, [getAccessTokenSilently, loginWithRedirect]);
+  }, [getAccessTokenSilently]);
 
   const forceReLogin = useCallback(async () => {
     await loginWithRedirect();
