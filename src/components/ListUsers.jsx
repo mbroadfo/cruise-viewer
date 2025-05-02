@@ -15,6 +15,7 @@ export default function ListUsers() {
       try {
         const apiToken = await getCachedAccessToken();
         if (!apiToken) throw new Error("No token available");
+        console.log("Using token:", apiToken.slice(0, 20), "...");
 
         const response = await fetch(
           "https://zf5sdrd108.execute-api.us-west-2.amazonaws.com/prod/admin-api/users",
@@ -28,10 +29,13 @@ export default function ListUsers() {
         );
 
         if (!response.ok) {
-          throw new Error("Failed to fetch users");
+          const errorText = await response.text();
+          console.error("Fetch failed:", response.status, errorText);
+          throw new Error(`Failed to fetch users: ${response.status} ${errorText}`);
         }
 
         const data = await response.json();
+        console.log("Users received:", data);
         setUsers(data);
       } catch (err) {
         console.error("User fetch failed:", err);
