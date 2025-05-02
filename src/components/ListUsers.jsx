@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useAccessToken } from "../lib/admin-api";
 
 export default function ListUsers() {
   const { getCachedAccessToken, forceReLogin } = useAccessToken();
+  const memorizedGetToken = useCallback(() => getCachedAccessToken(), [getCachedAccessToken]);
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,7 +14,7 @@ export default function ListUsers() {
       setLoading(true);
       setError(null);
       try {
-        const apiToken = await getCachedAccessToken();
+        const apiToken = await memorizedGetToken();
         if (!apiToken) throw new Error("No token available");
         console.log("Using token:", apiToken.slice(0, 20), "...");
 
@@ -46,7 +47,7 @@ export default function ListUsers() {
     };
 
     fetchUsers();
-  }, [getCachedAccessToken]);
+  }, [memorizedGetToken]);
 
   if (loading) return <p>Loading users...</p>;
 
