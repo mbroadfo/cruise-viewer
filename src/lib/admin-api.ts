@@ -9,6 +9,7 @@ export function useAccessToken() {
       const token = await getAccessTokenSilently({
         authorizationParams: {
           audience: "https://cruise-admin-api",
+          scope: 'create:users read:user delete:users',
         },
       });
       return token;
