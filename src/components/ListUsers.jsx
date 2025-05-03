@@ -1,6 +1,24 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useAccessToken } from "../lib/admin-api";
 
+function UsersTable({ users }) {
+  return (
+    <table>
+      <thead>
+        <tr><th>Email</th><th>Name</th></tr>
+      </thead>
+      <tbody>
+        {users.map((user) => (
+          <tr key={user.user_id}>
+            <td>{user.email}</td>
+            <td>{user.given_name} {user.family_name}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
 export default function ListUsers() {
   const { getCachedAccessToken, forceReLogin } = useAccessToken();
   const memorizedGetToken = useCallback(() => getCachedAccessToken(), [getCachedAccessToken]);
@@ -37,7 +55,7 @@ export default function ListUsers() {
 
         const data = await response.json();
         console.log("Users received:", data);
-        setUsers(data);
+        setUsers(data.data.users);  // <-- Adjust based on actual structure
       } catch (err) {
         console.error("User fetch failed:", err);
         setError(err.message);
@@ -64,5 +82,5 @@ export default function ListUsers() {
 
   if (error) return <p className="text-red-600 text-sm">❌ {error}</p>;
 
-  return <ListUsers users={users} />;
+  return <UsersTable users={users} />;
 }
