@@ -36,7 +36,7 @@ export default function PortalAdmin() {
           await getAccessTokenSilently({
             authorizationParams: {
               audience: "https://cruise-admin-api",
-              scope: "openid profile email offline_access",
+              scope: "openid profile email offline_access create:users read:user delete:users",
             },
           });
           setTokenReady(true);
@@ -48,7 +48,7 @@ export default function PortalAdmin() {
           await loginWithRedirect({
             authorizationParams: {
               audience: "https://cruise-admin-api",
-              scope: "openid profile email offline_access",
+              scope: "openid profile email offline_access create:users read:user delete:users",
             },
             appState: { returnTo: "/admin" },
           });

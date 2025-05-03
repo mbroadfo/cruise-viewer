@@ -8,6 +8,7 @@ import "./index.css";
 import { config } from "./config";
 
 const onRedirectCallback = (appState) => {
+  console.log("🔄 Redirecting to:", appState?.returnTo);
   window.history.replaceState(
     {},
     document.title,
