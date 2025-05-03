@@ -3,21 +3,35 @@ import { useAccessToken } from "../lib/admin-api";
 
 function UsersTable({ users }) {
   return (
-    <table>
-      <thead>
-        <tr><th>Email</th><th>Name</th></tr>
+    <table className="min-w-full border-collapse border border-gray-300 mt-4 text-sm">
+      <thead className="bg-gray-100">
+        <tr>
+          <th className="border px-4 py-2 text-left">Email</th>
+          <th className="border px-4 py-2 text-left">Name</th>
+          <th className="border px-4 py-2 text-left">User ID</th>
+          <th className="border px-4 py-2 text-left">Logins</th>
+          <th className="border px-4 py-2 text-left">Last Login</th>
+        </tr>
       </thead>
       <tbody>
         {users.map((user) => (
-          <tr key={user.user_id}>
-            <td>{user.email}</td>
-            <td>{user.given_name} {user.family_name}</td>
+          <tr key={user.user_id} className="hover:bg-gray-50">
+            <td className="border px-4 py-2">{user.email}</td>
+            <td className="border px-4 py-2">
+              {user.given_name} {user.family_name}
+            </td>
+            <td className="border px-4 py-2">{user.user_id}</td>
+            <td className="border px-4 py-2">{user.logins_count ?? "—"}</td>
+            <td className="border px-4 py-2">
+              {user.last_login ? new Date(user.last_login).toLocaleString() : "Never"}
+            </td>
           </tr>
         ))}
       </tbody>
     </table>
   );
 }
+
 
 export default function ListUsers() {
   const { getCachedAccessToken, forceReLogin } = useAccessToken();
