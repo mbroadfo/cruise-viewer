@@ -36,7 +36,10 @@ export default function InviteUser({ onUserInvited }) {
       if (!res.ok) throw new Error(data.error || "Unknown error");
 
       setStatus("✅ User invited successfully");
-      onUserInvited?.();  // 👈 Trigger refresh of user list
+      setTimeout(() => {
+        onUserInvited?.();  // Refresh list after delay
+      }, 1000);
+      
     } catch (err) {
       setError(`❌ Invite failed: ${err.message}`);
     }

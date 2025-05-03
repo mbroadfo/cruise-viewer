@@ -30,7 +30,10 @@ export default function DeleteUser({ onUserDeleted }) {
       if (!res.ok) throw new Error(data.error || "Unknown error");
 
       setStatus("✅ User deleted successfully");
-      onUserDeleted?.();  // 👈 Trigger refresh of user list
+      setTimeout(() => {
+        onUserDeleted?.();  // Refresh list after delay
+      }, 1000);
+      
     } catch (err) {
       setError(`❌ Delete failed: ${err.message}`);
     }
