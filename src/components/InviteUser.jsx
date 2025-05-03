@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAccessToken } from "../lib/admin-api";
 
-export default function InviteUser() {
+export default function InviteUser({ onUserInvited }) {
   const { getCachedAccessToken } = useAccessToken();
 
   const [email, setEmail] = useState("");
@@ -36,9 +36,7 @@ export default function InviteUser() {
       if (!res.ok) throw new Error(data.error || "Unknown error");
 
       setStatus("✅ User invited successfully");
-      setEmail("");
-      setGivenName("");
-      setFamilyName("");
+      onUserInvited?.();  // 👈 Trigger refresh of user list
     } catch (err) {
       setError(`❌ Invite failed: ${err.message}`);
     }

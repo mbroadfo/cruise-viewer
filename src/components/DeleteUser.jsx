@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAccessToken } from "../lib/admin-api";
 
-export default function DeleteUser() {
+export default function DeleteUser({ onUserDeleted }) {
   const { getCachedAccessToken } = useAccessToken();
 
   const [email, setEmail] = useState("");
@@ -30,7 +30,7 @@ export default function DeleteUser() {
       if (!res.ok) throw new Error(data.error || "Unknown error");
 
       setStatus("✅ User deleted successfully");
-      setEmail("");
+      onUserDeleted?.();  // 👈 Trigger refresh of user list
     } catch (err) {
       setError(`❌ Delete failed: ${err.message}`);
     }

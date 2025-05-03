@@ -8,7 +8,13 @@ import DeleteUser from "../components/DeleteUser";
 export default function PortalAdmin() {
   const { user, isAuthenticated, logout, getAccessTokenSilently, loginWithRedirect } = useAuth0();
   const navigate = useNavigate();
-  const [selectedCommand, setSelectedCommand] = useState(null);
+  const [selectedCommand, setSelectedCommand] = useState("list");
+  const [refreshKey, setRefreshKey] = useState(0);
+  const triggerRefresh = () => {
+    setRefreshKey((prev) => prev + 1);
+    setSelectedCommand("list");
+  };
+  
 
   const role = user && user["https://cruise-viewer.app/roles"]?.role;
   const isAdmin = isAuthenticated && role === "admin";
@@ -62,8 +68,8 @@ export default function PortalAdmin() {
         <h1 className="text-2xl font-bold text-center">Portal Admin</h1>
 
         <div className="flex flex-col space-y-3 pt-6">
-          <button className="bg-blue-100 hover:bg-blue-200 px-4 py-2 rounded" onClick={() => setSelectedCommand("invite")}>Invite User</button>
           <button className="bg-yellow-100 hover:bg-yellow-200 px-4 py-2 rounded" onClick={() => setSelectedCommand("list")}>List Users</button>
+          <button className="bg-blue-100 hover:bg-blue-200 px-4 py-2 rounded" onClick={() => setSelectedCommand("invite")}>Invite User</button>
           <button className="bg-red-100 hover:bg-red-200 px-4 py-2 rounded" onClick={() => setSelectedCommand("delete")}>Delete User</button>
         </div>
 
@@ -87,19 +93,19 @@ export default function PortalAdmin() {
           {selectedCommand === "list" && (
             <>
               <h2 className="text-xl font-semibold mb-4">User List</h2>
-              <ListUsers />
+              <ListUsers key={refreshKey} />
             </>
           )}
           {selectedCommand === "invite" && (
             <>
               <h2 className="text-xl font-semibold mb-4">Invite a New User</h2>
-              <InviteUser />
+              <InviteUser onUserInvited={triggerRefresh} />
             </>
           )}
           {selectedCommand === "delete" && (
             <>
               <h2 className="text-xl font-semibold mb-4">Delete a User</h2>
-              <DeleteUser />
+              <DeleteUser onUserDeleted={triggerRefresh} />
             </>
           )}
         </div>
