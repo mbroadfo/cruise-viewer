@@ -11,55 +11,21 @@ export default function PortalAdmin() {
     isAuthenticated,
     isLoading,
     logout,
-    getAccessTokenSilently,
-    loginWithRedirect,
   } = useAuth0();
   const navigate = useNavigate();
   const [selectedCommand, setSelectedCommand] = useState("list");
   const [refreshKey, setRefreshKey] = useState(0);
-  const [tokenReady, setTokenReady] = useState(false);
 
   const role = user && user["https://cruise-viewer.app/roles"]?.role;
   const isAdmin = isAuthenticated && role === "admin";
 
   useEffect(() => {
-    if (isLoading || !tokenReady) return;
     if (isAuthenticated && !isAdmin) {
       navigate("/");
     }
-  }, [isAuthenticated, isAdmin, navigate, isLoading, tokenReady]);  
+  }, [isAuthenticated, isAdmin, navigate, isLoading]);  
 
-  useEffect(() => {
-    const ensureAdminToken = async () => {
-      if (isAdmin) {
-        try {
-          await getAccessTokenSilently({
-            authorizationParams: {
-              audience: "https://cruise-admin-api",
-              scope: "openid profile email offline_access create:users read:user delete:users",
-            },
-          });
-          setTokenReady(true);
-        } catch (err) {
-          console.warn(
-            "🔁 Admin token missing, redirecting to login with correct audience",
-            err
-          );
-          await loginWithRedirect({
-            authorizationParams: {
-              audience: "https://cruise-admin-api",
-              scope: "openid profile email offline_access create:users read:user delete:users",
-            },
-            appState: { returnTo: "/admin" },
-          });
-        }
-      }
-    };
-
-    ensureAdminToken();
-  }, [isAdmin, getAccessTokenSilently, loginWithRedirect]);
-
-  if (isLoading || !tokenReady) {
+  if (isLoading) {
     return (
       <div className="p-8 text-center">
         <p className="text-sm text-gray-600">Checking access permissions...</p>
