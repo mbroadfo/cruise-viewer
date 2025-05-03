@@ -3,7 +3,7 @@ import { ChevronRight, ChevronDown } from 'lucide-react';
 import DepartureRow from './DepartureRow';
 import { config } from "../config.js";
 
-function TripCard({ trip, index }) {
+function TripCard({ trip, index, favorites, onToggleFavorite }) {
   const detailsRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -82,7 +82,13 @@ function TripCard({ trip, index }) {
 
       <div className="mt-2 mb-4 px-4">
         {trip.departures.map((departure, i) => (
-          <DepartureRow key={i} departure={departure} />
+          <DepartureRow
+          key={i}
+          departure={departure}
+          isFavorite={favorites.includes(departure.code)}
+          onToggleFavorite={onToggleFavorite}
+        />
+        
         ))}
       </div>
     </details>

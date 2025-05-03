@@ -6,6 +6,7 @@ import TripViewer from "./TripViewer.jsx";
 import PortalAdmin from "./pages/PortalAdmin.jsx";
 import "./index.css";
 import { config } from "./config";
+import { Toaster } from 'react-hot-toast';
 
 const onRedirectCallback = (appState) => {
   console.log("🔄 Redirecting to:", appState?.returnTo);
@@ -23,8 +24,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       clientId={config.auth0.clientId}
       authorizationParams={{
         redirect_uri: window.location.origin,
-        audience: "https://cruise-admin-api",
-        scope: "openid profile email offline_access create:users read:user delete:users",
       }}
       cacheLocation="localstorage"
       useRefreshTokens={true}
@@ -36,6 +35,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="/admin" element={<PortalAdmin />} />
         </Routes>
       </BrowserRouter>
+      <Toaster position="top-right" /> 
     </Auth0Provider>
   </React.StrictMode>
 );

@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { ChevronDown, ChevronRight, CalendarDays, Ship } from 'lucide-react';
 import CabinCategoryRow from './CabinCategoryRow';
+import { Star, StarOff } from "lucide-react";
 
-function DepartureRow({ departure }) {
+function DepartureRow({ departure, isFavorite, onToggleFavorite }) {
   const detailsRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -19,6 +20,7 @@ function DepartureRow({ departure }) {
   const today = new Date();
   const diffDays = Math.floor((departureDate - today) / (1000 * 60 * 60 * 24));
   const cruiseDuration = Math.floor((endDate - departureDate) / (1000 * 60 * 60 * 24));
+  const code = new URL(departure.booking_url).searchParams.get("departure");
 
   const dateDisplay = departureDate.toLocaleDateString(undefined, {
     year: 'numeric', month: 'short', day: 'numeric'
@@ -78,6 +80,16 @@ function DepartureRow({ departure }) {
         <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-xs whitespace-nowrap">
           {totalAvailable} cabins available
         </span>
+
+        <button
+          className="ml-auto mr-2 text-yellow-500 hover:text-yellow-600"
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleFavorite(code);
+          }}
+        >
+          {isFavorite ? <Star size={16} /> : <StarOff size={16} />}
+        </button>
       </summary>
 
       <div className="px-2 pb-2 space-y-1 transition-all duration-300 ease-in-out">
