@@ -24,6 +24,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       clientId={config.auth0.clientId}
       authorizationParams={{
         redirect_uri: window.location.origin,
+        audience: "https://cruise-viewer-api",
+        scope: "openid profile email offline_access create:users_app_metadata read:users_app_metadata update:users_app_metadata delete:users_app_metadata"
       }}
       cacheLocation="localstorage"
       useRefreshTokens={true}
