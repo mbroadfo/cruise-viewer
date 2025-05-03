@@ -23,11 +23,11 @@ export default function PortalAdmin() {
   const isAdmin = isAuthenticated && role === "admin";
 
   useEffect(() => {
-    if (isLoading) return;
-    if (!isLoading && isAuthenticated && !isAdmin && tokenReady) {
+    if (isLoading || !tokenReady) return;
+    if (isAuthenticated && !isAdmin) {
       navigate("/");
     }
-  }, [isAuthenticated, isAdmin, navigate, isLoading, tokenReady]);
+  }, [isAuthenticated, isAdmin, navigate, isLoading, tokenReady]);  
 
   useEffect(() => {
     const ensureAdminToken = async () => {
