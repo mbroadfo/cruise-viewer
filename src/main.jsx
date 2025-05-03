@@ -7,6 +7,14 @@ import PortalAdmin from "./pages/PortalAdmin.jsx";
 import "./index.css";
 import { config } from "./config";
 
+const onRedirectCallback = (appState) => {
+  window.history.replaceState(
+    {},
+    document.title,
+    appState?.returnTo || window.location.pathname
+  );
+};
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Auth0Provider
@@ -18,6 +26,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       }}
       cacheLocation="localstorage"
       useRefreshTokens={true}
+      onRedirectCallback={onRedirectCallback}
     >
       <BrowserRouter>
         <Routes>
