@@ -68,7 +68,6 @@ export default function ListUsers() {
         }
 
         const data = await response.json();
-        console.log("Users received:", data);
         setUsers(data.data.users);  // <-- Adjust based on actual structure
       } catch (err) {
         console.error("User fetch failed:", err);

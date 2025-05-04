@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
+import useViewerAccessToken from "./hooks/useViewerAccessToken";
 import { fetchAndSortTrips } from './components/FetchAndSortTrips';
 import TripCard from './components/TripCard';
 import FilterSidebar from './components/FilterSidebar';
@@ -13,7 +14,8 @@ const durationRanges = [
 ];
 
 function TripViewer() {
-  const { isAuthenticated, loginWithRedirect, logout, isLoading, user, getAccessTokenSilently } = useAuth0();
+  const { isAuthenticated, loginWithRedirect, logout, isLoading, user } = useAuth0();
+  const getViewerToken = useViewerAccessToken();
   const [allTrips, setAllTrips] = useState([]);
   const [filteredTrips, setFilteredTrips] = useState([]);
   const [favorites, setFavorites] = useState([]);
@@ -27,40 +29,29 @@ function TripViewer() {
     destinations: [],
   });
   const [dateBounds, setDateBounds] = useState({ min: '', max: '' });
-
   const [apiToken, setApiToken] = useState(null);
 
   useEffect(() => {
     const fetchToken = async () => {
       try {
-        const isAdminRoute = window.location.pathname.startsWith("/admin");
-  
-        const token = await getAccessTokenSilently({
-          audience: isAdminRoute
-            ? "https://cruise-admin-api"
-            : "https://cruise-viewer-api",
-          scope: isAdminRoute
-            ? "update:users"
-            : "update:users_app_metadata",
-        });
-  
+        const token = await getViewerToken();
         setApiToken(token);
       } catch (e) {
         console.error("❌ Failed to fetch token:", e);
       }
     };
-  
+
     if (isAuthenticated) {
       fetchToken();
     }
-  }, [getAccessTokenSilently, isAuthenticated]);  
+  }, [getViewerToken, isAuthenticated]);
 
   useEffect(() => {
     if (isLoading) return;
     if (!isAuthenticated) loginWithRedirect();
     if (user?.app_metadata?.favorites) {
       setFavorites(user.app_metadata.favorites);
-    }    
+    }
   }, [isLoading, isAuthenticated, loginWithRedirect, user]);
 
   useEffect(() => {
@@ -68,7 +59,6 @@ function TripViewer() {
       const trips = await fetchAndSortTrips();
       setAllTrips(trips);
 
-      // Compute min/max dates for bounds
       const allDates = trips.flatMap((t) => t.departures.map((d) => new Date(d.start_date)));
       const min = allDates.length ? new Date(Math.min(...allDates)) : '';
       const max = allDates.length ? new Date(Math.max(...allDates)) : '';
@@ -129,13 +119,13 @@ function TripViewer() {
     setFavorites(prev =>
       prev.includes(code)
         ? prev.filter(c => c !== code)
-        : [...prev, code].slice(-20) // Keep max 20
+        : [...prev, code].slice(-20)
     );
     setIsDirty(true);
   };
 
   const [saving, setSaving] = useState(false);
-  
+
   const saveFavorites = async () => {
     setSaving(true);
     try {
@@ -150,12 +140,11 @@ function TripViewer() {
           favorites,
         }),
       });
-  
+
       if (!response.ok) {
         setIsDirty(false);
         toast.error('Failed to save favorites.');
-      }
-      else {
+      } else {
         console.log("✅ Favorites saved");
         toast.success('Favorites saved!');
         const refreshedUser = await fetchUserInfo(apiToken);
@@ -163,22 +152,21 @@ function TripViewer() {
           setFavorites(refreshedUser.app_metadata.favorites);
         }
       }
-  
+
       setIsDirty(false);
     } catch (err) {
       console.error("💥 Error saving favorites:", err);
       alert("Failed to save favorites.");
     } finally {
       setSaving(false);
-    };  
-  }
+    }
+  };
 
   const ships = [...new Set(allTrips.flatMap((t) => t.departures.map((d) => d.ship)))].sort();
   const destinations = [...new Set(allTrips.flatMap((t) => t.destinations?.split('|').map((d) => d.trim()) || []))].sort();
 
   if (isLoading) return <div className="p-4">Authenticating...</div>;
 
-  // If not logged in, redirect immediately
   if (!isAuthenticated) {
     loginWithRedirect();
     return null;

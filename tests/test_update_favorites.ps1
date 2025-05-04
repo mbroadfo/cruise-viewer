@@ -1,7 +1,8 @@
 # Prompt for Auth0 token if not set
 $Auth0Token = $env:AUTH0_TOKEN
 if (-not $Auth0Token) {
-    Write-Host "`nEnter a valid Auth0 access token:"
+    Write-Host ""
+    Write-Host "Enter a valid Auth0 access token:"
     $Auth0Token = Read-Host "Auth0 Token"
 }
 
@@ -22,29 +23,34 @@ $favoritesPayload = @{
 } | ConvertTo-Json -Depth 2
 
 # Clean token and build headers
-$cleanToken = $Auth0Token.Trim()
+$cleanToken = "$Auth0Token".Trim() -replace '\r|\n', ''
 $headers = @{
     "Authorization" = "Bearer $cleanToken"
     "Content-Type"  = "application/json"
 }
 
-# Debug information
-Write-Host "`nRequest URL: $apiUrl"
-Write-Host "Authorization Header: $($headers['Authorization'])"
+# Debug info
+Write-Host ""
+Write-Host "Request URL: $apiUrl"
+Write-Host "Authorization Header: Bearer [REDACTED]"
 Write-Host "Payload:"
 Write-Host $favoritesPayload
 
 # Make the request
 try {
     $response = Invoke-RestMethod -Method Patch -Uri $apiUrl -Headers $headers -Body $favoritesPayload
-    Write-Host "`nResponse:"
+    Write-Host ""
+    Write-Host "Response:"
     $response | ConvertTo-Json -Depth 4
 } catch {
-    Write-Error "Request failed:"
+    Write-Host ""
+    Write-Host "Request failed:"
     Write-Host $_.Exception.Message
+
     if ($_.Exception.Response -and $_.Exception.Response.Content) {
         [string]$errorBody = $_.Exception.Response.Content
-        Write-Host "`nAPI Error Response:"
+        Write-Host ""
+        Write-Host "API Error Response:"
         Write-Host $errorBody
     }
 }

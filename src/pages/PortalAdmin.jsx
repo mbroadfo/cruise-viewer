@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import ListUsers from "../components/ListUsers";
 import InviteUser from "../components/InviteUser";
 import DeleteUser from "../components/DeleteUser";
+import { useAccessToken } from "../hooks/useAccessToken";
 
 export default function PortalAdmin() {
   const {
@@ -12,6 +13,7 @@ export default function PortalAdmin() {
     isLoading,
     logout,
   } = useAuth0();
+  const { getAdminToken } = useAccessToken();
   const navigate = useNavigate();
   const [selectedCommand, setSelectedCommand] = useState("list");
   const [refreshKey, setRefreshKey] = useState(0);
@@ -24,6 +26,16 @@ export default function PortalAdmin() {
       navigate("/");
     }
   }, [isAuthenticated, isAdmin, navigate, isLoading]);  
+
+  useEffect(() => {
+    if (isAdmin) {
+      getAdminToken().then(token => {
+        console.log("✅ Admin token fetched", token.slice(0, 30) + "...");
+      }).catch(err => {
+        console.error("❌ Failed to fetch admin token", err);
+      });
+    }
+  }, [isAdmin, getAdminToken]);
 
   if (isLoading) {
     return (
