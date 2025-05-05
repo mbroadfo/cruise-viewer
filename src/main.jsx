@@ -10,7 +10,6 @@ import { config } from "./config";
 import { Toaster } from 'react-hot-toast';
 
 const onRedirectCallback = (appState) => {
-  console.log("🔄 Redirecting to:", appState?.returnTo);
   window.history.replaceState(
     {},
     document.title,
@@ -24,7 +23,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       domain={config.auth0.domain}
       clientId={config.auth0.clientId}
       authorizationParams={{
-        redirect_uri: window.location.origin
+        redirect_uri: window.location.origin,
+        audience: "https://cruise-viewer-api",
+        scope: "openid profile email offline_access read:users create:users_app_metadata read:users_app_metadata update:users_app_metadata delete:users_app_metadata"
       }}
       cacheLocation="localstorage"
       useRefreshTokens={true}

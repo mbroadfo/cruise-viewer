@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useAccessToken } from "../lib/admin-api";
+import { useAccessToken } from "../hooks/useAccessToken";
 
 export default function InviteUser({ onUserInvited }) {
-  const { getCachedAccessToken } = useAccessToken();
+  const { getAdminToken } = useAccessToken();
 
   const [email, setEmail] = useState("");
   const [givenName, setGivenName] = useState("");
@@ -16,7 +16,7 @@ export default function InviteUser({ onUserInvited }) {
     setError(null);
 
     try {
-      const apiToken = await getCachedAccessToken();
+      const apiToken = await getAdminToken();
 
       const res = await fetch("https://zf5sdrd108.execute-api.us-west-2.amazonaws.com/prod/admin-api/users", {
         method: "POST",

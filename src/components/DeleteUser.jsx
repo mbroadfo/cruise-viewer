@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useAccessToken } from "../lib/admin-api";
+import { useAccessToken } from "../hooks/useAccessToken";
 
 export default function DeleteUser({ onUserDeleted }) {
-  const { getCachedAccessToken } = useAccessToken();
+  const { getAdminToken } = useAccessToken();
 
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState(null);
@@ -14,7 +14,7 @@ export default function DeleteUser({ onUserDeleted }) {
     setError(null);
 
     try {
-      const apiToken = await getCachedAccessToken();
+      const apiToken = await getAdminToken();
 
       const res = await fetch("https://zf5sdrd108.execute-api.us-west-2.amazonaws.com/prod/admin-api/users", {
         method: "DELETE",

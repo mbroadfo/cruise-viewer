@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useAccessToken } from "../lib/admin-api";
+import { useAccessToken } from "../hooks/useAccessToken";
 
 function UsersTable({ users }) {
   return (
@@ -34,8 +34,9 @@ function UsersTable({ users }) {
 
 
 export default function ListUsers() {
-  const { getCachedAccessToken, forceReLogin } = useAccessToken();
-  const memorizedGetToken = useCallback(() => getCachedAccessToken(), [getCachedAccessToken]);
+  const { getAdminToken, forceReLogin } = useAccessToken(); 
+  const memorizedGetToken = useCallback(() => getAdminToken(), [getAdminToken]);
+
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -48,7 +49,6 @@ export default function ListUsers() {
       try {
         const apiToken = await memorizedGetToken();
         if (!apiToken) throw new Error("No token available");
-        console.log("Using token:", apiToken.slice(0, 20), "...");
 
         const response = await fetch(
           "https://zf5sdrd108.execute-api.us-west-2.amazonaws.com/prod/admin-api/users",

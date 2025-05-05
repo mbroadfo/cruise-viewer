@@ -29,13 +29,11 @@ export default function PortalAdmin() {
 
   useEffect(() => {
     if (isAdmin) {
-      getAdminToken().then(token => {
-        console.log("✅ Admin token fetched", token.slice(0, 30) + "...");
-      }).catch(err => {
+      getAdminToken().catch(err => {
         console.error("❌ Failed to fetch admin token", err);
       });
     }
-  }, [isAdmin, getAdminToken]);
+  }, [isAdmin, getAdminToken]);  
 
   if (isLoading) {
     return (

@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { ChevronDown, ChevronRight, CalendarDays, Ship } from 'lucide-react';
 import CabinCategoryRow from './CabinCategoryRow';
-import { Star, StarOff } from "lucide-react";
+import { Heart, HeartOff } from "lucide-react";
 
 function DepartureRow({ departure, isFavorite, onToggleFavorite }) {
   const detailsRef = useRef(null);
@@ -63,8 +63,18 @@ function DepartureRow({ departure, isFavorite, onToggleFavorite }) {
           </span>
         </div>
 
-        {/* See Trip link */}
-        <div className="text-right pr-1">
+        {/* See Trip link + Favorite icon (inline) */}
+        <div className="flex items-center justify-end gap-2 pr-1">
+          <button
+            className="text-red-500 hover:text-red-600"
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleFavorite(code);
+            }}
+            aria-label="Toggle favorite"
+          >
+            {isFavorite ? <Heart className="w-4 h-4 fill-red-500" /> : <HeartOff className="w-4 h-4" />}
+          </button>
           <a
             href={departure.booking_url}
             target="_blank"
@@ -81,15 +91,6 @@ function DepartureRow({ departure, isFavorite, onToggleFavorite }) {
           {totalAvailable} cabins available
         </span>
 
-        <button
-          className="ml-auto mr-2 text-yellow-500 hover:text-yellow-600"
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleFavorite(code);
-          }}
-        >
-          {isFavorite ? <Star size={16} /> : <StarOff size={16} />}
-        </button>
       </summary>
 
       <div className="px-2 pb-2 space-y-1 transition-all duration-300 ease-in-out">
