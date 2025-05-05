@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAccessToken } from "../hooks/useAccessToken";
+import { config } from "./config.js";
 
 export default function InviteUser({ onUserInvited }) {
   const { getAdminToken } = useAccessToken();
@@ -18,7 +19,7 @@ export default function InviteUser({ onUserInvited }) {
     try {
       const apiToken = await getAdminToken();
 
-      const res = await fetch("https://zf5sdrd108.execute-api.us-west-2.amazonaws.com/prod/admin-api/users", {
+      const response = await fetch(`${config.apiBaseUrl}/admin-api/user/favorites`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -31,9 +32,9 @@ export default function InviteUser({ onUserInvited }) {
         }),
       });
 
-      const data = await res.json();
+      const data = await response.json();
 
-      if (!res.ok) throw new Error(data.error || "Unknown error");
+      if (!response.ok) throw new Error(data.error || "Unknown error");
 
       setStatus("✅ User invited successfully");
       setTimeout(() => {

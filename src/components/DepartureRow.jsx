@@ -73,7 +73,10 @@ function DepartureRow({ departure, isFavorite, onToggleFavorite }) {
             }}
             aria-label="Toggle favorite"
           >
-            {isFavorite ? <Heart className="w-4 h-4 fill-red-500" /> : <HeartOff className="w-4 h-4" />}
+            {isFavorite
+              ? <Heart className="w-4 h-4 fill-red-500 text-red-500" />
+              : <Heart className="w-4 h-4" />
+            }
           </button>
           <a
             href={departure.booking_url}

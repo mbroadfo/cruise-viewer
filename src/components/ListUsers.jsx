@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useAccessToken } from "../hooks/useAccessToken";
+import { config } from "./config.js";
 
 function UsersTable({ users }) {
   return (
@@ -42,6 +43,7 @@ export default function ListUsers() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
@@ -50,8 +52,7 @@ export default function ListUsers() {
         const apiToken = await memorizedGetToken();
         if (!apiToken) throw new Error("No token available");
 
-        const response = await fetch(
-          "https://zf5sdrd108.execute-api.us-west-2.amazonaws.com/prod/admin-api/users",
+        const response = await fetch(`${config.apiBaseUrl}/admin-api/user/favorites`,
           {
             method: "GET",
             headers: {

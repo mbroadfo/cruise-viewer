@@ -5,6 +5,8 @@ import { fetchAndSortTrips } from './components/FetchAndSortTrips';
 import TripCard from './components/TripCard';
 import FilterSidebar from './components/FilterSidebar';
 import { toast } from 'react-hot-toast';
+import { config } from "./config.js";
+
 
 const durationRanges = [
   { label: '1–4 days', min: 1, max: 4 },
@@ -108,7 +110,14 @@ function TripViewer() {
           return null;
         }
 
-        return { ...trip, departures: matchingDepartures };
+        return {
+          ...trip,
+          departures: matchingDepartures.map(dep => ({
+            ...dep,
+            code: new URL(dep.booking_url).searchParams.get("departure")
+          }))
+        };
+        
       })
       .filter(Boolean);
 
@@ -129,7 +138,7 @@ function TripViewer() {
   const saveFavorites = async () => {
     setSaving(true);
     try {
-      const response = await fetch("https://cruise-viewer-api/prod/admin-api/user/favorites", {
+      const response = await fetch(`${config.apiBaseUrl}/admin-api/user/favorites`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
