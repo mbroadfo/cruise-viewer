@@ -10,7 +10,7 @@ npx tsc --noEmit
 
 # Run depcheck for unused dependencies
 Write-Host "Checking for unused dependencies..."
-npx depcheck --ignores=tailwindcss
+npx depcheck --ignores="postcss,autoprefixer,@tailwindcss/postcss,tailwindcss"
 
 # Run ts-prune for unused exports
 Write-Host "Checking for unused exports..."
