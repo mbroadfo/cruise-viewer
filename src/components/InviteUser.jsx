@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAccessToken } from "../hooks/useAccessToken";
-import { config } from "./config.js";
+import { config } from "../config.js";
 
 export default function InviteUser({ onUserInvited }) {
   const { getAdminToken } = useAccessToken();

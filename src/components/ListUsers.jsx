@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useAccessToken } from "../hooks/useAccessToken";
-import { config } from "./config.js";
+import { config } from "../config.js";
 
 function UsersTable({ users }) {
   return (

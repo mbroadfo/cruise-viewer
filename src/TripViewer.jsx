@@ -49,12 +49,12 @@ function TripViewer() {
   }, [getViewerToken, isAuthenticated]);
 
   useEffect(() => {
-    if (isLoading) return;
-    if (!isAuthenticated) loginWithRedirect();
-    if (user?.app_metadata?.favorites) {
-      setFavorites(user.app_metadata.favorites);
-    }
-  }, [isLoading, isAuthenticated, loginWithRedirect, user]);
+    if (isLoading || !isAuthenticated || !apiToken || !user?.email) return;
+  
+    fetchUserFavorites(apiToken, user.email)
+      .then(setFavorites)
+      .catch((err) => console.error("❌ Failed to fetch favorites:", err));
+  }, [isLoading, isAuthenticated, apiToken, user?.email]);  
 
   useEffect(() => {
     const loadTrips = async () => {
@@ -156,10 +156,8 @@ function TripViewer() {
       } else {
         console.log("✅ Favorites saved");
         toast.success('Favorites saved!');
-        const refreshedUser = await fetchUserInfo(apiToken);
-        if (refreshedUser?.app_metadata?.favorites) {
-          setFavorites(refreshedUser.app_metadata.favorites);
-        }
+        const refreshedFavorites = await fetchUserFavorites(apiToken, user.email);
+        setFavorites(refreshedFavorites);
       }
 
       setIsDirty(false);
@@ -251,22 +249,22 @@ function TripViewer() {
 
 export default TripViewer;
 
-const fetchUserInfo = async (token) => {
+const fetchUserFavorites = async (token, email) => {
   try {
-    const response = await fetch("https://cruise-viewer-api/prod/admin-api/user/info", {
+    const res = await fetch(`${config.apiBaseUrl}/admin-api/user?email=${encodeURIComponent(email)}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch user info");
+    if (!res.ok) {
+      throw new Error("Failed to fetch favorites");
     }
 
-    const result = await response.json();
-    return result?.data?.user;
+    const { data } = await res.json();
+    return data?.user?.app_metadata?.favorites || [];
   } catch (err) {
-    console.error("Failed to fetch updated user info:", err);
-    return null;
+    console.error("❌ Failed to fetch favorites:", err);
+    return [];
   }
 };
