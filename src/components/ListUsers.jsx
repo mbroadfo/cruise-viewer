@@ -52,7 +52,7 @@ export default function ListUsers() {
         const apiToken = await memorizedGetToken();
         if (!apiToken) throw new Error("No token available");
 
-        const response = await fetch(`${config.apiBaseUrl}/admin-api/user/favorites`,
+        const response = await fetch(`${config.apiBaseUrl}/admin-api/users`,
           {
             method: "GET",
             headers: {

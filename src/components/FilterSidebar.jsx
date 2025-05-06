@@ -1,4 +1,5 @@
 import React from 'react';
+import { Heart } from "lucide-react";
 
 const durationRanges = [
   { label: '1–4 days', min: 1, max: 4 },
@@ -7,7 +8,7 @@ const durationRanges = [
   { label: '15+ days', min: 15, max: Infinity },
 ];
 
-function FilterSidebar({ filters, onFilterChange, ships, destinations, minStartDate, maxEndDate }) {
+function FilterSidebar({ filters, onFilterChange, ships, destinations, minStartDate, maxEndDate, favoriteCount }) {
   const handleChange = (e) => {
     const { name, value, type, selectedOptions } = e.target;
 
@@ -64,6 +65,22 @@ function FilterSidebar({ filters, onFilterChange, ships, destinations, minStartD
         >
           Clear Filters
         </button>
+      </div>
+      
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          id="showFavoritesOnly"
+          checked={filters.showFavoritesOnly}
+          onChange={(e) =>
+            onFilterChange({ ...filters, showFavoritesOnly: e.target.checked })
+          }
+          className="accent-red-600"
+        />
+        <label htmlFor="showFavoritesOnly" className="flex items-center gap-1">
+          <Heart className="w-4 h-4 fill-red-600 text-red-600" />
+          Show Favorites Only ({favoriteCount})
+        </label>
       </div>
 
       <div>

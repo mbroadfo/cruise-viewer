@@ -31,6 +31,7 @@ function TripViewer() {
     ships: [],
     durations: [],
     destinations: [],
+    showFavoritesOnly: false,
   });
   const [dateBounds, setDateBounds] = useState({ min: '', max: '' });
   const [apiToken, setApiToken] = useState(null);
@@ -95,12 +96,16 @@ function TripViewer() {
               return range && duration >= range.min && duration <= range.max;
             });
 
+          const matchesFavorite =
+            !filters.showFavoritesOnly || favorites.includes(new URL(dep.booking_url).searchParams.get("departure"));
+    
           return (
             (!filters.startDate || depDate >= new Date(filters.startDate)) &&
             (!filters.endDate || depDate <= new Date(filters.endDate)) &&
             cabinCount >= filters.minCabins &&
             (filters.ships.length === 0 || filters.ships.includes(dep.ship)) &&
-            matchesDuration
+            matchesDuration &&
+            matchesFavorite
           );
         });
 
@@ -124,7 +129,7 @@ function TripViewer() {
       .filter(Boolean);
 
     setFilteredTrips(filtered);
-  }, [allTrips, filters]);
+  }, [allTrips, filters, favorites]);
 
   const handleToggleFavorite = (code) => {
     setFavorites(prev =>
@@ -236,6 +241,7 @@ function TripViewer() {
           ships={ships}
           destinations={destinations}
           dateBounds={dateBounds}
+          favoriteCount={favorites.length}
         />
         <div className="p-4 space-y-4 overflow-y-auto">
           {filteredTrips.map((trip, i) => (
