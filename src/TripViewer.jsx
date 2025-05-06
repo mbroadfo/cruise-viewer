@@ -8,6 +8,8 @@ import { toast } from 'react-hot-toast';
 import { config } from "./config.js";
 
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const durationRanges = [
   { label: '1–4 days', min: 1, max: 4 },
   { label: '5–7 days', min: 5, max: 7 },
@@ -156,6 +158,10 @@ function TripViewer() {
       } else {
         console.log("✅ Favorites saved");
         toast.success('Favorites saved!');
+        
+        // 💤 Wait for Auth0 propagation
+        await sleep(1500);
+
         const refreshedFavorites = await fetchUserFavorites(apiToken, user.email);
         setFavorites(refreshedFavorites);
       }
