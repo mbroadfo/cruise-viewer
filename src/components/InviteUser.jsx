@@ -19,7 +19,7 @@ export default function InviteUser({ onUserInvited }) {
     try {
       const apiToken = await getAdminToken();
 
-      const response = await fetch(`${config.apiBaseUrl}/admin-api/user/favorites`, {
+      const response = await fetch(`${config.apiBaseUrl}/admin-api/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

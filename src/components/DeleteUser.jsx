@@ -17,7 +17,7 @@ export default function DeleteUser({ onUserDeleted }) {
     try {
       const apiToken = await getAdminToken();
 
-      const response = await fetch(`${config.apiBaseUrl}/admin-api/user/favorites`, {
+      const response = await fetch(`${config.apiBaseUrl}/admin-api/users`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

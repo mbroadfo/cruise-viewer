@@ -12,6 +12,7 @@ function UsersTable({ users }) {
           <th className="border px-4 py-2 text-left">User ID</th>
           <th className="border px-4 py-2 text-left">Logins</th>
           <th className="border px-4 py-2 text-left">Last Login</th>
+          <th className="border px-4 py-2 text-left">Favorites</th>
         </tr>
       </thead>
       <tbody>
@@ -26,6 +27,7 @@ function UsersTable({ users }) {
             <td className="border px-4 py-2">
               {user.last_login ? new Date(user.last_login).toLocaleString() : "Never"}
             </td>
+            <td className="border px-4 py-2">{user.favorites_count ?? 0}</td>
           </tr>
         ))}
       </tbody>
@@ -69,7 +71,12 @@ export default function ListUsers() {
         }
 
         const data = await response.json();
-        setUsers(data.data.users);  // <-- Adjust based on actual structure
+        const usersWithFavorites = data.data.users.map((user) => ({
+          ...user,
+          favorites_count: user.app_metadata?.favorites?.length || 0,
+        }));
+
+        setUsers(usersWithFavorites);
       } catch (err) {
         console.error("User fetch failed:", err);
         setError(err.message);
