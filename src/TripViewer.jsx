@@ -185,14 +185,10 @@ function TripViewer() {
 
   if (isLoading) return <div className="p-4">Authenticating...</div>;
 
-  if (!isAuthenticated && !isLoading) {
-    return <p className="text-red-500 p-4">🔐 Redirecting to login...</p>;
-  }
-  
   if (!isAuthenticated) {
     loginWithRedirect();
     return null;
-  }  
+  }
 
   return (
     <>
@@ -238,7 +234,7 @@ function TripViewer() {
         </div>
       </header>
 
-      <div className="flex flex-col md:grid md:grid-cols-[250px_1fr] flex-1 overflow-hidden" style={{ minHeight: "calc(100dvh - 56px)" }}>
+      <div className="grid grid-cols-[250px_1fr] h-[calc(100vh-56px)] overflow-hidden">
         <FilterSidebar
           filters={filters}
           onFilterChange={setFilters}
@@ -247,7 +243,7 @@ function TripViewer() {
           dateBounds={dateBounds}
           favoriteCount={favorites.length}
         />
-        <div className="p-2 md:p-4 space-y-4 overflow-y-auto">
+        <div className="p-4 space-y-4 overflow-y-auto">
           {filteredTrips.map((trip, i) => (
             <TripCard
               key={i}

@@ -38,10 +38,6 @@ foreach ($file in $allFiles) {
         continue
     }
 
-    if ($file.Name -in @("package.json", "package-lock.json")) {
-        continue
-    }
-    
     # Write-Host "Including: $relPath"
 
     Add-Content -Path $outputFile -Value "# FILE: $relPath"
