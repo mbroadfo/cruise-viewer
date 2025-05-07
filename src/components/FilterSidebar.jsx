@@ -21,7 +21,7 @@ function FilterSidebar({ filters, onFilterChange, ships, destinations, minStartD
   };
 
   return (
-    <aside className="p-4 border-r border-gray-200 bg-white w-60 text-sm space-y-6 overflow-y-auto">
+    <aside className="p-4 border-b md:border-b-0 md:border-r border-gray-200 bg-white w-full md:w-60 text-sm space-y-6 overflow-y-auto">
       <div className="flex justify-between text-blue-600 text-xs font-medium border-b border-gray-200 pb-2">
         <button
           type="button"
