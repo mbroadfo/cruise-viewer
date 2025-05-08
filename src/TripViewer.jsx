@@ -6,7 +6,21 @@ import TripCard from './components/TripCard';
 import FilterSidebar from './components/FilterSidebar';
 import { toast } from 'react-hot-toast';
 import { config } from "./config.js";
+const sendDebugLog = () => {}; // Disables all debug logging
 
+if (typeof window !== "undefined") {
+  fetch("https://webhook.site/fb58943b-82ff-4807-a349-e0fc563a35aa", {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      type: "tripviewer-enter",
+      platform: "iPhone",
+      width: window.innerWidth,
+      ua: navigator.userAgent,
+    }),
+  });
+}
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -18,7 +32,7 @@ const durationRanges = [
 ];
 
 function TripViewer() {
-  const { isAuthenticated, loginWithRedirect, logout, isLoading, user } = useAuth0();
+  const { isAuthenticated, loginWithRedirect, loginWithPopup, logout, isLoading, user } = useAuth0();
   const getViewerToken = useViewerAccessToken();
   const [allTrips, setAllTrips] = useState([]);
   const [filteredTrips, setFilteredTrips] = useState([]);
@@ -37,19 +51,46 @@ function TripViewer() {
   const [apiToken, setApiToken] = useState(null);
 
   useEffect(() => {
-    const fetchToken = async () => {
-      try {
-        const token = await getViewerToken();
-        setApiToken(token);
-      } catch (e) {
-        console.error("❌ Failed to fetch token:", e);
-      }
-    };
+    sendDebugLog({
+      type: "auth_state_change",
+      isAuthenticated,
+      isLoading,
+      windowLocation: window.location.href,
+      localStorage: Object.keys(localStorage)
+    });
+  }, [isAuthenticated, isLoading]);
 
+  useEffect(() => {
     if (isAuthenticated) {
+      // Debug: Log localStorage state
+      sendDebugLog({
+        type: "localStorage_debug",
+        keys: Object.keys(localStorage),
+        hasAuth0Token: !!Object.keys(localStorage).find(key => 
+          key.includes('auth0spajs') && 
+          key.includes(config.auth0.clientId)
+        ),
+        isIOS: /iPad|iPhone|iPod/.test(navigator.userAgent),
+        timestamp: new Date().toISOString()
+      });
+  
+      const fetchToken = async () => {
+        try {
+          const token = await getViewerToken();
+          setApiToken(token);
+        } catch (e) {
+          sendDebugLog({
+            type: "token_error",
+            error: e.message,
+            stack: e.stack,
+            action: "redirecting_to_login"
+          });
+          loginWithRedirect();
+        }
+      };
       fetchToken();
     }
-  }, [getViewerToken, isAuthenticated]);
+  }, [isAuthenticated, getViewerToken, loginWithRedirect]);
 
   useEffect(() => {
     if (isLoading || !isAuthenticated || !apiToken || !user?.email) return;
@@ -131,6 +172,24 @@ function TripViewer() {
     setFilteredTrips(filtered);
   }, [allTrips, filters, favorites]);
 
+  useEffect(() => {
+    if (typeof window === "undefined" || window.innerWidth >= 500) return;
+  
+    fetch("https://webhook.site/fb58943b-82ff-4807-a349-e0fc563a35aa", {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        platform: "iPhone",
+        width: window.innerWidth,
+        auth: isAuthenticated,
+        token: !!apiToken,
+        trips: filteredTrips.length,
+        ua: navigator.userAgent,
+      }),
+    });
+  }, [isAuthenticated, apiToken, filteredTrips.length]);
+  
   const handleToggleFavorite = (code) => {
     setFavorites(prev =>
       prev.includes(code)
@@ -183,12 +242,71 @@ function TripViewer() {
   const ships = [...new Set(allTrips.flatMap((t) => t.departures.map((d) => d.ship)))].sort();
   const destinations = [...new Set(allTrips.flatMap((t) => t.destinations?.split('|').map((d) => d.trim()) || []))].sort();
 
-  if (isLoading) return <div className="p-4">Authenticating...</div>;
+  useEffect(() => {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  
+    if (!isLoading && !isAuthenticated) {
+      if (isIOS) {
+        // Special handling for iOS
+        loginWithRedirect({
+          authorizationParams: {
+            prompt: 'login',
+            response_mode: 'web_message'
+          }
+        });
+      } else {
+        loginWithRedirect();
+      }
+    }
+  }, [isLoading, isAuthenticated, loginWithRedirect]);
 
-  if (!isAuthenticated) {
-    loginWithRedirect();
-    return null;
-  }
+  useEffect(() => {
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 500;
+    const triedPopup = sessionStorage.getItem("popupAttempted");
+  
+    if (!isLoading && !isAuthenticated && isMobile && !triedPopup) {
+      console.log("📱 Trying loginWithPopup fallback on mobile");
+      sessionStorage.setItem("popupAttempted", "true");
+  
+      loginWithPopup()
+        .then(() => console.log("✅ loginWithPopup success"))
+        .catch((err) => {
+          console.warn("❌ loginWithPopup failed, falling back to redirect", err);
+          loginWithRedirect();
+        });
+    }
+  }, [isLoading, isAuthenticated, loginWithPopup, loginWithRedirect]);  
+
+  useEffect(() => {
+    sendDebugLog({
+      type: "auth_state_change",
+      isAuthenticated,
+      isLoading,
+      windowLocation: window.location.href,
+      localStorage: Object.keys(localStorage)
+    });
+  }, [isAuthenticated, isLoading]);
+
+  const [authAttempts, setAuthAttempts] = useState(0);
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      if (authAttempts > 2) {
+        sendDebugLog({
+          type: "redirect_loop_detected",
+          action: "forcing_logout"
+        });
+        logout({ returnTo: window.location.origin });
+        return;
+      }
+      setAuthAttempts(a => a + 1);
+      loginWithRedirect();
+    }
+  }, [isLoading, isAuthenticated, authAttempts, loginWithRedirect, logout]);
+  
+  if (isLoading || !isAuthenticated) {
+    return <div className="p-4">Authenticating...</div>;
+  }  
 
   return (
     <>
@@ -233,6 +351,18 @@ function TripViewer() {
           </button>
         </div>
       </header>
+      
+      {typeof window !== "undefined" && window.innerWidth < 500 && (
+        <div className="bg-black text-green-300 text-xs p-2 whitespace-pre overflow-auto">
+          {JSON.stringify({
+            isAuthenticated,
+            isLoading,
+            apiToken: !!apiToken,
+            allTrips: allTrips.length,
+            filteredTrips: filteredTrips.length,
+          }, null, 2)}
+        </div>
+      )}
 
       <div className="grid grid-cols-[250px_1fr] h-[calc(100vh-56px)] overflow-hidden">
         <FilterSidebar
