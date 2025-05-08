@@ -8,7 +8,7 @@ import AdminRoute from "./components/AdminRoute.jsx";
 import "./index.css";
 import { config } from "./config";
 import { Toaster } from 'react-hot-toast';
-import { sendDebugLog } from "./utils/debugLog";
+import { sendDebugLog } from "./utils/debugLogs";
 
 if (typeof window !== "undefined") {
   const isMobile = window.innerWidth < 500;

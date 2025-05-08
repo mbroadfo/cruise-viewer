@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import useViewerAccessToken from "./hooks/useViewerAccessToken";
 import { fetchAndSortTrips } from './components/FetchAndSortTrips';
@@ -6,19 +6,15 @@ import TripCard from './components/TripCard';
 import FilterSidebar from './components/FilterSidebar';
 import { toast } from 'react-hot-toast';
 import { config } from "./config.js";
-const sendDebugLog = () => {}; // Disables all debug logging
+import { sendDebugLog } from "./utils/debugLogs";
+
 
 if (typeof window !== "undefined") {
-  fetch("https://webhook.site/fb58943b-82ff-4807-a349-e0fc563a35aa", {
-    method: "POST",
-    mode: "no-cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      type: "tripviewer-enter",
-      platform: "iPhone",
-      width: window.innerWidth,
-      ua: navigator.userAgent,
-    }),
+  sendDebugLog({
+    type: "tripviewer-enter",
+    platform: /iPhone|iPad|iPod/.test(navigator.userAgent) ? "iOS" : "other",
+    width: window.innerWidth,
+    ua: navigator.userAgent,
   });
 }
 
@@ -49,19 +45,11 @@ function TripViewer() {
   });
   const [dateBounds, setDateBounds] = useState({ min: '', max: '' });
   const [apiToken, setApiToken] = useState(null);
+  const hasLoggedLocalStorage = useRef(false);
 
   useEffect(() => {
-    sendDebugLog({
-      type: "auth_state_change",
-      isAuthenticated,
-      isLoading,
-      windowLocation: window.location.href,
-      localStorage: Object.keys(localStorage)
-    });
-  }, [isAuthenticated, isLoading]);
-
-  useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && !hasLoggedLocalStorage.current) {
+      hasLoggedLocalStorage.current = true;
       // Debug: Log localStorage state
       sendDebugLog({
         type: "localStorage_debug",
@@ -74,23 +62,25 @@ function TripViewer() {
         timestamp: new Date().toISOString()
       });
   
-      const fetchToken = async () => {
-        try {
-          const token = await getViewerToken();
-          setApiToken(token);
-        } catch (e) {
-          sendDebugLog({
-            type: "token_error",
-            error: e.message,
-            stack: e.stack,
-            action: "redirecting_to_login"
-          });
-          loginWithRedirect();
-        }
-      };
+      if (isAuthenticated) {
+        const fetchToken = async () => {
+          try {
+            const token = await getViewerToken();
+            setApiToken(token);
+          } catch (e) {
+            sendDebugLog({
+              type: "token_error",
+              error: e.message,
+              stack: e.stack,
+              action: "redirecting_to_login"
+            });
+            loginWithRedirect();
+          }
+        };
       fetchToken();
     }
-  }, [isAuthenticated, getViewerToken, loginWithRedirect]);
+  }
+}, [isAuthenticated, getViewerToken, loginWithRedirect]); 
 
   useEffect(() => {
     if (isLoading || !isAuthenticated || !apiToken || !user?.email) return;
@@ -174,19 +164,15 @@ function TripViewer() {
 
   useEffect(() => {
     if (typeof window === "undefined" || window.innerWidth >= 500) return;
-  
-    fetch("https://webhook.site/fb58943b-82ff-4807-a349-e0fc563a35aa", {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        platform: "iPhone",
-        width: window.innerWidth,
-        auth: isAuthenticated,
-        token: !!apiToken,
-        trips: filteredTrips.length,
-        ua: navigator.userAgent,
-      }),
+
+    sendDebugLog({
+      type: "mobile-metrics",
+      platform: "iPhone",
+      width: window.innerWidth,
+      auth: isAuthenticated,
+      token: !!apiToken,
+      trips: filteredTrips.length,
+      ua: navigator.userAgent,
     });
   }, [isAuthenticated, apiToken, filteredTrips.length]);
   
