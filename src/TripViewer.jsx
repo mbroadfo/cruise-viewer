@@ -280,19 +280,42 @@ function TripViewer() {
       if (authAttempts > 2) {
         sendDebugLog({
           type: "redirect_loop_detected",
-          action: "forcing_logout"
+          action: "clearing_storage_and_restarting"
         });
-        logout({ returnTo: window.location.origin });
+
+        // Clear only Auth0-specific keys if you want to be safer
+        Object.keys(localStorage).forEach(key => {
+          if (key.includes('auth0spajs')) {
+            localStorage.removeItem(key);
+          }
+        });
+
+        loginWithRedirect({
+          authorizationParams: {
+            prompt: 'login',
+            response_mode: 'web_message'
+          }
+        });
         return;
       }
       setAuthAttempts(a => a + 1);
       loginWithRedirect();
     }
-  }, [isLoading, isAuthenticated, authAttempts, loginWithRedirect, logout]);
+  }, [isLoading, isAuthenticated, authAttempts, loginWithRedirect]);
   
-  if (isLoading || !isAuthenticated) {
+  if (isLoading || !isAuthenticated || !apiToken) {
     return <div className="p-4">Authenticating...</div>;
   }  
+
+  const totalDepartures = filteredTrips.reduce((sum, trip) => sum + trip.departures.length, 0);
+  const totalCabins = filteredTrips.reduce(
+    (sum, trip) => sum + trip.departures.reduce(
+      (depSum, dep) => depSum + dep.categories.reduce(
+        (catSum, cat) => cat.status === "Available" ? catSum + cat.num_cabins : catSum,
+        0
+      ), 0),
+    0
+  );
 
   return (
     <>
@@ -327,7 +350,13 @@ function TripViewer() {
             </button>
           )}
           <span className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full font-medium">
-            {filteredTrips.length} Trip{filteredTrips.length !== 1 ? 's' : ''} found
+            {filteredTrips.length.toLocaleString()} Trip{filteredTrips.length !== 1 ? 's' : ''}
+          </span>
+          <span className="bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full font-medium">
+            {totalDepartures.toLocaleString()} Departure{totalDepartures !== 1 ? 's' : ''}
+          </span>
+          <span className="bg-purple-100 text-purple-800 text-sm px-3 py-1 rounded-full font-medium">
+            {totalCabins.toLocaleString()} Cabin{totalCabins !== 1 ? 's' : ''}
           </span>
           <button
             className="bg-gray-100 hover:bg-gray-200 text-sm px-3 py-1 rounded"

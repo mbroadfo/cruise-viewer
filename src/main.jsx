@@ -24,43 +24,44 @@ if (typeof window !== "undefined") {
   sendDebugLog({ type: "boot", ...window.debugInfo });
 }
 
-if (typeof window !== "undefined" && window.innerWidth < 500) {
-  console.log("📱 Forcing loginWithRedirect() on mobile startup");
+if (typeof window !== "undefined" && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
   const params = new URLSearchParams(window.location.search);
-  const isReturningFromAuth = params.has("code") || params.has("error");
-  const alreadyRedirecting = sessionStorage.getItem("loginStarted");
+  const isReturning = params.has("code") || params.has("error");
+  const alreadyRedirecting = sessionStorage.getItem("iosRedirectStarted");
 
-  if (!isReturningFromAuth && !alreadyRedirecting) {
-    sessionStorage.setItem("loginStarted", "true");
-    sendDebugLog({ type: "mobile-login-init", params: Object.fromEntries(params.entries()) });
+  if (!isReturning && !alreadyRedirecting) {
+    sessionStorage.setItem("iosRedirectStarted", "true");
+    sendDebugLog({ type: "ios_manual_login", ua: navigator.userAgent });
+
     window.location.href = `https://${config.auth0.domain}/authorize?` +
       new URLSearchParams({
         client_id: config.auth0.clientId,
         redirect_uri: window.location.origin,
         response_type: "code",
         audience: "https://cruise-viewer-api",
-        scope: "openid profile email",
+        scope: "openid profile email offline_access",
+        response_mode: "web_message",
+        prompt: "login"
       });
   }
 }
 
-const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Auth0Provider
-  domain={config.auth0.domain}
-  clientId={config.auth0.clientId}
-  authorizationParams={{
-    redirect_uri: window.location.origin,
-    audience: "https://cruise-viewer-api",
-    scope: "openid profile email offline_access read:users create:users_app_metadata read:users_app_metadata update:users_app_metadata delete:users_app_metadata",
-    response_mode: isIOS ? "web_message" : "query",
-    prompt: isIOS ? "login" : undefined
-  }}
-  cacheLocation="localstorage"
-  useRefreshTokens={true}
->
+      domain={config.auth0.domain}
+      clientId={config.auth0.clientId}
+      authorizationParams={{
+        redirect_uri: window.location.origin,
+        audience: "https://cruise-viewer-api",
+        scope: "openid profile email offline_access read:users create:users_app_metadata read:users_app_metadata update:users_app_metadata delete:users_app_metadata",
+        response_mode: /iPhone|iPad|iPod/.test(navigator.userAgent) ? "web_message" : "query",
+        prompt: /iPhone|iPad|iPod/.test(navigator.userAgent) ? "login" : undefined
+      }}
+      cacheLocation="localstorage"
+      useRefreshTokens={true}
+      useCookiesForTransactions={/iPhone|iPad|iPod/.test(navigator.userAgent)}
+    >
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<TripViewer />} />

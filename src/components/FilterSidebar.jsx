@@ -60,6 +60,7 @@ function FilterSidebar({ filters, onFilterChange, ships, destinations, minStartD
               ships: [],
               durations: [],
               destinations: [],
+              showFavoritesOnly: false,
             });
           }}
         >
