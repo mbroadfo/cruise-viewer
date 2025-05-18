@@ -9,7 +9,7 @@ const processDebugQueue = () => {
   lastDebugTime = Date.now();
   
   try {
-    fetch("https://webhook.site/65614e4e-8b3c-4597-b801-ded39852e6e5", {
+    fetch("https://webhook.site/705ffcfb-85d1-460e-b41b-a56097558904", {
       method: "POST",
       mode: "no-cors",
       headers: { "Content-Type": "application/json" },

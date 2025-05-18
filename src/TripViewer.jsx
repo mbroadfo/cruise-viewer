@@ -77,10 +77,10 @@ function TripViewer() {
             loginWithRedirect();
           }
         };
-      fetchToken();
+        fetchToken();
+      }
     }
-  }
-}, [isAuthenticated, getViewerToken, loginWithRedirect]); 
+  }, [isAuthenticated, getViewerToken, loginWithRedirect]); 
 
   useEffect(() => {
     if (isLoading || !isAuthenticated || !apiToken || !user?.email) return;
@@ -92,19 +92,47 @@ function TripViewer() {
 
   useEffect(() => {
     const loadTrips = async () => {
-      const trips = await fetchAndSortTrips();
-      setAllTrips(trips);
+      
+      try {
+        const trips = await fetchAndSortTrips();
+      
+        sendDebugLog({
+          type: "trip_fetch_result",
+          tripsCount: trips.length,
+          timestamp: new Date().toISOString(),
+          ua: navigator.userAgent,
+        });
 
-      const allDates = trips.flatMap((t) => t.departures.map((d) => new Date(d.start_date)));
-      const min = allDates.length ? new Date(Math.min(...allDates)) : '';
-      const max = allDates.length ? new Date(Math.max(...allDates)) : '';
-      const fmt = (d) => d.toISOString().split('T')[0];
+        setAllTrips(trips);
 
-      setFilters((f) => ({ ...f, startDate: fmt(min), endDate: fmt(max) }));
-      setDateBounds({ min: fmt(min), max: fmt(max) });
+        const allDates = trips.flatMap((t) => t.departures.map((d) => new Date(d.start_date)));
+        const min = allDates.length ? new Date(Math.min(...allDates)) : '';
+        const max = allDates.length ? new Date(Math.max(...allDates)) : '';
+        const fmt = (d) => (d instanceof Date && !isNaN(d)) ? d.toISOString().split('T')[0] : '';
+
+        setFilters((f) => ({ ...f, startDate: fmt(min), endDate: fmt(max) }));
+        setDateBounds({ min: fmt(min), max: fmt(max) });
+      } catch (err) {
+        sendDebugLog({
+          type: "trip_fetch_error",
+          message: err.message,
+          stack: err.stack,
+        });
+      }
     };
     loadTrips();
   }, []);
+
+  useEffect(() => {
+      if (apiToken && isAuthenticated && filteredTrips.length === 0 && allTrips.length === 0) {
+      sendDebugLog({
+        type: "blank_render_detected",
+        context: "Trips not populated despite auth",
+        ua: navigator.userAgent,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }, [apiToken, isAuthenticated, filteredTrips, allTrips]);
 
   useEffect(() => {
     if (!allTrips.length) return;
@@ -303,6 +331,40 @@ function TripViewer() {
     }
   }, [isLoading, isAuthenticated, authAttempts, loginWithRedirect]);
   
+  useEffect(() => {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const hasAuth0Tokens = Object.keys(localStorage).some(key =>
+      key.includes('auth0spajs') && key.includes(config.auth0.clientId)
+    );
+
+    // Check if Auth0 is currently processing a login redirect
+    const isRedirecting = typeof window !== "undefined" &&
+      window.location.search.includes("code=") &&
+      window.location.search.includes("state=");
+
+    if (
+      isIOS &&
+      !isLoading &&
+      !isAuthenticated &&
+      hasAuth0Tokens &&
+      !isRedirecting
+    ) {
+      sendDebugLog({
+        type: "ios_localstorage_auth_fix",
+        action: "clearing_auth0_tokens_and_reloading",
+        timestamp: new Date().toISOString(),
+      });
+
+      Object.keys(localStorage).forEach(key => {
+        if (key.includes('auth0spajs')) {
+          localStorage.removeItem(key);
+        }
+      });
+
+      window.location.href = "/";
+    }
+  }, [isLoading, isAuthenticated]);
+
   if (isLoading || !isAuthenticated || !apiToken) {
     return <div className="p-4">Authenticating...</div>;
   }  

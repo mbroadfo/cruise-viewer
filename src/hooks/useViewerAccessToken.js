@@ -13,6 +13,16 @@ export default function useViewerAccessToken() {
         scope: "openid profile email offline_access"
       });
 
+      if (!token) {
+        sendDebugLog({
+          type: "auth_failure",
+          context: "getAccessTokenSilently returned null",
+          ua: navigator.userAgent,
+          timestamp: new Date().toISOString()
+        });
+        return null;
+      }
+
       sendDebugLog({
         type: "token-success",
         platform: /iPhone|iPad|iPod/.test(navigator.userAgent) ? "iOS" : "other",
@@ -36,6 +46,7 @@ export default function useViewerAccessToken() {
 
       if (e.error === "missing_refresh_token") {
         await loginWithRedirect({
+          appState: { returnTo: window.location.pathname },
           authorizationParams: {
             prompt: "login",
             response_mode: isIOS ? "web_message" : "query",
