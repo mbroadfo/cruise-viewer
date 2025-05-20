@@ -1,0 +1,49 @@
+﻿.\
+  -- generate_project_tree.ps1
+  -- .env
+  -- .gitignore
+  -- README.md
+  -- analyze-quality.ps1
+  -- deploy.ps1
+  -- dump.ps1
+  -- eslint.config.js
+  -- index.html
+  -- package-lock.json
+  -- package.json
+  -- postcss.config.js
+  -- tailwind.config.js
+  -- tsconfig.json
+  -- vite.config.js
+src\components\
+  -- Header.jsx
+  -- AdminRoute.jsx
+  -- CabinCategoryRow.jsx
+  -- DeleteUser.jsx
+  -- DepartureRow.jsx
+  -- FetchAndSortTrips.jsx
+  -- FilterSidebar.jsx
+  -- InviteUser.jsx
+  -- ListUsers.jsx
+  -- TripCard.jsx
+src\hooks\
+  -- useAuth.js
+  -- useFavorites.js
+  -- useTripFilters.js
+  -- useTrips.js
+  -- useAccessToken.js
+  -- useViewerAccessToken.js
+public\
+  -- favicon.jpg
+  -- vite.svg
+src\
+  -- TripViewer.jsx
+  -- config.js
+  -- env.d.ts
+  -- index.css
+  -- main.jsx
+  -- vite-env.d.ts
+src\pages\
+  -- PortalAdmin.jsx
+tests\
+  -- test_admin_apis.ps1
+  -- test_update_favorites.ps1

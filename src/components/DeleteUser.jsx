@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useAccessToken } from "../hooks/useAccessToken";
 import { config } from "../config.js";
 
 export default function DeleteUser({ onUserDeleted }) {
   const { getAdminToken } = useAccessToken();
+  const memorizedGetToken = useCallback(() => getAdminToken(), [getAdminToken]);
 
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState(null);
@@ -15,28 +16,57 @@ export default function DeleteUser({ onUserDeleted }) {
     setError(null);
 
     try {
-      const apiToken = await getAdminToken();
-
-      const response = await fetch(`${config.apiBaseUrl}/admin-api/users`, {
-        method: "DELETE",
+      const apiToken = await memorizedGetToken();
+      if (!apiToken) throw new Error("No token available");
+      
+      console.log("BEARER token:", apiToken);
+      
+      // Step 1: Lookup user
+      const lookupRes = await fetch(`${config.apiBaseUrl}/admin-api/users`, {
+        method: "GET",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${apiToken}`,
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email }),
       });
 
-      const data = await response.json();
+      if (!lookupRes.ok) {
+        const errorText = await lookupRes.text();
+        throw new Error(`Lookup failed: ${lookupRes.status} ${errorText}`);
+      }
 
-      if (!response.ok) throw new Error(data.error || "Unknown error");
+      console.log("User ID:", encodeURIComponent(user.user_id));
+
+      const lookupJson = await lookupRes.json();
+      const user = lookupJson.data.users.find(
+        (u) => u.email.toLowerCase() === email.toLowerCase()
+      );
+
+      if (!user) throw new Error("No user found with that email");
+
+      // Step 2: DELETE user by ID
+      const deleteRes = await fetch(
+        `${config.apiBaseUrl}/admin-api/users/${encodeURIComponent(user.user_id)}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${apiToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!deleteRes.ok) {
+        const errorText = await deleteRes.text();
+        throw new Error(`Delete failed: ${deleteRes.status} ${errorText}`);
+      }
 
       setStatus("✅ User deleted successfully");
-      setTimeout(() => {
-        onUserDeleted?.();  // Refresh list after delay
-      }, 1000);
-      
+      setTimeout(() => onUserDeleted?.(), 1000);
+
     } catch (err) {
-      setError(`❌ Delete failed: ${err.message}`);
+      console.error("Delete failed:", err);
+      setError(`❌ ${err.message}`);
     }
   };
 
@@ -52,7 +82,10 @@ export default function DeleteUser({ onUserDeleted }) {
           required
         />
       </div>
-      <button type="submit" className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+      <button
+        type="submit"
+        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+      >
         Delete
       </button>
 
