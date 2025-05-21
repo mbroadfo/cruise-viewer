@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
-import { ChevronDown, ChevronRight, CalendarDays, Ship } from 'lucide-react';
+import { ChevronDown, ChevronRight, CalendarDays, Ship, Heart } from 'lucide-react';
 import CabinCategoryRow from './CabinCategoryRow';
-import { Heart, HeartOff } from "lucide-react";
 
 function DepartureRow({ departure, isFavorite, onToggleFavorite }) {
   const detailsRef = useRef(null);
@@ -40,8 +39,8 @@ function DepartureRow({ departure, isFavorite, onToggleFavorite }) {
       onToggle={handleToggle}
       className="ml-4 mb-2 border border-gray-200 rounded"
     >
-      <summary className="cursor-pointer p-2 grid grid-cols-[auto_1fr_auto_auto] items-center text-sm font-semibold border-b border-gray-300 gap-4 bg-gray-50">
-        {/* Chevron + Ship name (toggle only) */}
+      <summary className="cursor-pointer p-2 flex flex-col sm:grid sm:grid-cols-[auto_1fr_auto_auto] sm:items-center text-sm font-semibold border-b border-gray-300 gap-2 sm:gap-4 bg-gray-50">
+        {/* Chevron + Ship name */}
         <div className="flex items-center gap-2">
           <span className="w-4">
             {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
@@ -53,7 +52,7 @@ function DepartureRow({ departure, isFavorite, onToggleFavorite }) {
         </div>
 
         {/* Date & Countdown */}
-        <div className="flex items-center justify-center gap-4 text-gray-700">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-4 text-gray-700">
           <span className="flex items-center gap-1">
             <CalendarDays size={14} className="text-gray-400" />
             {dateDisplay} ({cruiseDuration} days)
@@ -63,8 +62,8 @@ function DepartureRow({ departure, isFavorite, onToggleFavorite }) {
           </span>
         </div>
 
-        {/* See Trip link + Favorite icon (inline) */}
-        <div className="flex items-center justify-end gap-2 pr-1">
+        {/* Favorite + See Trip (stacked on mobile) */}
+        <div className="flex justify-between sm:justify-end items-center w-full sm:w-auto gap-2 pr-1">
           <button
             className="text-red-500 hover:text-red-600"
             onClick={(e) => {
@@ -75,8 +74,7 @@ function DepartureRow({ departure, isFavorite, onToggleFavorite }) {
           >
             {isFavorite
               ? <Heart className="w-4 h-4 fill-red-500 text-red-500" />
-              : <Heart className="w-4 h-4" />
-            }
+              : <Heart className="w-4 h-4" />}
           </button>
           <a
             href={departure.booking_url}
@@ -89,11 +87,10 @@ function DepartureRow({ departure, isFavorite, onToggleFavorite }) {
           </a>
         </div>
 
-        {/* Cabin count */}
-        <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-xs whitespace-nowrap">
+        {/* Cabin availability */}
+        <span className="mt-1 sm:mt-0 px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-xs whitespace-nowrap">
           {totalAvailable} cabins available
         </span>
-
       </summary>
 
       <div className="px-2 pb-2 space-y-1 transition-all duration-300 ease-in-out">

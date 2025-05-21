@@ -23,8 +23,28 @@ function TripViewer() {
   const { trips, dateBounds, ships, destinations } = useTrips();
   const { favorites, toggleFavorite, saveFavorites, isDirty, setIsDirty, saving, setFavorites } = useFavorites(user, apiToken);
   const { filteredTrips, filters, setFilters } = useTripFilters(trips, favorites, dateBounds);
-  const [showFilters, setShowFilters] = useState(true);
-  const toggleFilters = () => setShowFilters(prev => !prev);
+
+  // Mobile state management
+  const [showFilters, setShowFilters] = useState(false);
+
+  // Mobile state management
+  useEffect(() => {
+    const handleResize = () => {
+      const isMobile = window.innerWidth < 640;
+      if (!isMobile) {
+        setShowFilters(true);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Initial check
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const toggleFilters = () => {
+    setShowFilters(prev => !prev);
+  };
 
   useEffect(() => {
     if (isAuthenticated && !hasLoggedLocalStorage.current) {
