@@ -21,36 +21,38 @@ function FilterSidebar({ filters, onFilterChange, ships, destinations, minStartD
   };
 
   return (
-    <aside className="p-4 border-r border-gray-200 bg-white w-60 text-sm space-y-6 overflow-y-auto">
-      <div className="flex justify-between text-blue-600 text-xs font-medium border-b border-gray-200 pb-2">
+    <aside className="p-4 w-60 text-xs space-y-2 overflow-y-auto bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100">
+      <div className="flex justify-between text-blue-600 border-b border-gray-200 pb-2 text-center">
         <button
           type="button"
           aria-label="Expand all trips and departures"
-          className="hover:underline"
+          className="w-1/3 hover:underline flex flex-col items-center"
           onClick={(e) => {
             e.preventDefault();
             document.querySelectorAll('details').forEach((el) => (el.open = true));
           }}
         >
-          Expand All
+          <span>Expand</span>
+          <span>All</span>
         </button>
 
         <button
           type="button"
           aria-label="Collapse all trips and departures"
-          className="hover:underline"
+          className="w-1/3 hover:underline flex flex-col items-center"
           onClick={(e) => {
             e.preventDefault();
             document.querySelectorAll('details').forEach((el) => (el.open = false));
           }}
         >
-          Collapse All
+          <span>Collapse</span>
+          <span>All</span>
         </button>
 
         <button
           type="button"
           aria-label="Clear all filters"
-          className="hover:underline"
+          className="w-1/3 hover:underline flex flex-col items-center"
           onClick={(e) => {
             e.preventDefault();
             onFilterChange({
@@ -64,11 +66,12 @@ function FilterSidebar({ filters, onFilterChange, ships, destinations, minStartD
             });
           }}
         >
-          Clear Filters
+          <span>Clear</span>
+          <span>Filters</span>
         </button>
       </div>
-      
-      <div className="flex items-center gap-2">
+
+      <div className="flex items-center gap-2 rounded-lg bg-white dark:bg-gray-800 shadow-sm px-2 py-1">
         <input
           type="checkbox"
           id="showFavoritesOnly"
@@ -84,8 +87,8 @@ function FilterSidebar({ filters, onFilterChange, ships, destinations, minStartD
         </label>
       </div>
 
-      <div>
-        <label className="block font-medium mb-1">Start Date</label>
+      <div className="space-y-0.5 rounded-lg bg-white dark:bg-gray-800 shadow-sm px-2 py-2">
+        <label className="text-xs font-medium">Start Date</label>
         <input
           type="date"
           name="startDate"
@@ -93,12 +96,12 @@ function FilterSidebar({ filters, onFilterChange, ships, destinations, minStartD
           onChange={handleChange}
           min={minStartDate}
           max={maxEndDate}
-          className="w-full border border-gray-300 rounded px-2 py-1"
+          className="w-full border border-gray-300 rounded px-2 py-0.5 text-xs"
         />
       </div>
 
-      <div>
-        <label className="block font-medium mb-1">End Date</label>
+      <div className="space-y-0.5 rounded-lg bg-white dark:bg-gray-800 shadow-sm px-2 py-2">
+        <label className="text-xs font-medium">End Date</label>
         <input
           type="date"
           name="endDate"
@@ -106,18 +109,30 @@ function FilterSidebar({ filters, onFilterChange, ships, destinations, minStartD
           onChange={handleChange}
           min={filters.startDate || minStartDate}
           max={maxEndDate}
-          className="w-full border border-gray-300 rounded px-2 py-1"
+          className="w-full border border-gray-300 rounded px-2 py-0.5 text-xs"
         />
       </div>
 
-      <div>
-        <label className="block font-medium mb-1">Destinations</label>
+      <div className="rounded-lg bg-white dark:bg-gray-800 shadow-sm px-2 py-2">
+        <label className="block text-xs font-medium mb-1">Min Cabin Availability</label>
+        <input
+          type="number"
+          name="minCabins"
+          value={filters.minCabins}
+          onChange={handleChange}
+          className="w-full border border-gray-300 rounded px-2 py-1 text-xs"
+          min={0}
+        />
+      </div>
+
+      <div className="rounded-lg bg-white dark:bg-gray-800 shadow-sm px-2 py-2">
+        <label className="block text-xs font-medium mb-1">Destinations</label>
         <select
           name="destinations"
           multiple
           value={filters.destinations}
           onChange={handleChange}
-          className="w-full border border-gray-300 rounded px-2 py-1 h-28"
+          className="w-full border border-gray-300 rounded px-2 py-1 h-28 text-xs"
         >
           {(destinations || []).map((dest) => (
             <option key={dest} value={dest}>
@@ -127,26 +142,14 @@ function FilterSidebar({ filters, onFilterChange, ships, destinations, minStartD
         </select>
       </div>
 
-      <div>
-        <label className="block font-medium mb-1">Min Cabin Availability</label>
-        <input
-          type="number"
-          name="minCabins"
-          value={filters.minCabins}
-          onChange={handleChange}
-          className="w-full border border-gray-300 rounded px-2 py-1"
-          min={0}
-        />
-      </div>
-
-      <div>
-        <label className="block font-medium mb-1">Ships</label>
+      <div className="rounded-lg bg-white dark:bg-gray-800 shadow-sm px-2 py-2">
+        <label className="block text-xs font-medium mb-1">Ships</label>
         <select
           name="ships"
           multiple
           value={filters.ships}
           onChange={handleChange}
-          className="w-full border border-gray-300 rounded px-2 py-1 h-28"
+          className="w-full border border-gray-300 rounded px-2 py-1 h-28 text-xs"
         >
           {(ships || []).map((ship) => (
             <option key={ship} value={ship}>
@@ -156,14 +159,14 @@ function FilterSidebar({ filters, onFilterChange, ships, destinations, minStartD
         </select>
       </div>
 
-      <div>
-        <label className="block font-medium mb-1">Durations</label>
+      <div className="rounded-lg bg-white dark:bg-gray-800 shadow-sm px-2 py-2">
+        <label className="block text-xs font-medium mb-1">Durations</label>
         <select
           name="durations"
           multiple
           value={filters.durations}
           onChange={handleChange}
-          className="w-full border border-gray-300 rounded px-2 py-1 h-28"
+          className="w-full border border-gray-300 rounded px-2 py-1 h-28 text-xs"
         >
           {durationRanges.map((range) => (
             <option key={range.label} value={range.label}>

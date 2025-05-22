@@ -23,9 +23,9 @@ function TripCard({ trip, index, favorites, onToggleFavorite }) {
     <details
       ref={detailsRef}
       onToggle={handleToggle}
-      className={`rounded border ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} shadow-sm mb-3`}
+      className={`rounded border ${index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-900'} dark:border-gray-600 shadow-sm mb-3`}
     >
-      <summary className="cursor-pointer pt-2 pb-2 px-3 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 hover:bg-gray-100 transition">
+      <summary className="cursor-pointer pt-2 pb-2 px-3 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
         {/* Chevron */}
         <span className="mt-1 sm:mt-0" aria-hidden="true">
           {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
@@ -40,14 +40,14 @@ function TripCard({ trip, index, favorites, onToggleFavorite }) {
             {tags.map((tag, i) => (
               <span
                 key={i}
-                className="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full"
+                className="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 text-xs px-2 py-0.5 rounded-full"
               >
                 {tag}
               </span>
             ))}
           </div>
 
-          <div className="mt-1 text-sm text-gray-600">
+          <div className="mt-1 text-sm text-gray-600 dark:text-gray-300">
             {trip.availableDepartureCount} Departure
             {trip.availableDepartureCount > 1 ? 's' : ''} • Next: {formattedDate}
           </div>

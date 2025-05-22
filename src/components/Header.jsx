@@ -38,7 +38,7 @@ function Header({
             </div>
             <div className="ml-auto">
               <button
-                className="bg-black text-white hover:bg-gray-800 px-2 py-0.5 rounded text-xs whitespace-nowrap"
+                className="bg-black text-white hover:bg-gray-800 px-2 py-0.5 rounded"
                 onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
               >
                 Log out
@@ -60,7 +60,7 @@ function Header({
             <button
               onClick={saveFavorites}
               disabled={saving}
-              className="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-0.5 rounded disabled:opacity-50"
+              className="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 px-2 py-0.5 rounded-full font-medium"
             >
               {saving ? "Saving..." : "Save"}
             </button>

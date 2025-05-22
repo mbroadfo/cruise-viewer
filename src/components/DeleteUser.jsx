@@ -35,14 +35,14 @@ export default function DeleteUser({ onUserDeleted }) {
         throw new Error(`Lookup failed: ${lookupRes.status} ${errorText}`);
       }
 
-      console.log("User ID:", encodeURIComponent(user.user_id));
-
       const lookupJson = await lookupRes.json();
       const user = lookupJson.data.users.find(
         (u) => u.email.toLowerCase() === email.toLowerCase()
       );
 
       if (!user) throw new Error("No user found with that email");
+
+      console.log("User ID:", encodeURIComponent(user.user_id));
 
       // Step 2: DELETE user by ID
       const deleteRes = await fetch(
@@ -76,7 +76,7 @@ export default function DeleteUser({ onUserDeleted }) {
         <label className="block text-sm font-medium mb-1">Email</label>
         <input
           type="email"
-          className="w-full border px-3 py-2 rounded"
+          className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-2 rounded"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -84,13 +84,13 @@ export default function DeleteUser({ onUserDeleted }) {
       </div>
       <button
         type="submit"
-        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
       >
         Delete
       </button>
 
-      {status && <p className="text-green-600 text-sm">{status}</p>}
-      {error && <p className="text-red-600 text-sm">{error}</p>}
+      <p className="text-green-600 dark:text-green-400 text-sm">{status}</p>
+      <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
     </form>
   );
 }

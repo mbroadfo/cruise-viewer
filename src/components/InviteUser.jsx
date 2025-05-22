@@ -50,17 +50,17 @@ export default function InviteUser({ onUserInvited }) {
     <form onSubmit={handleInvite} className="space-y-4 max-w-md">
       <div>
         <label className="block text-sm font-medium mb-1">Email</label>
-        <input type="email" className="w-full border px-3 py-2 rounded" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <input type="email" className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-2 rounded" value={email} onChange={(e) => setEmail(e.target.value)} required />
       </div>
       <div>
         <label className="block text-sm font-medium mb-1">First Name</label>
-        <input type="text" className="w-full border px-3 py-2 rounded" value={givenName} onChange={(e) => setGivenName(e.target.value)} />
+        <input type="text" className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-2 rounded" value={givenName} onChange={(e) => setGivenName(e.target.value)} />
       </div>
       <div>
         <label className="block text-sm font-medium mb-1">Last Name</label>
-        <input type="text" className="w-full border px-3 py-2 rounded" value={familyName} onChange={(e) => setFamilyName(e.target.value)} />
+        <input type="text" className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-2 rounded" value={familyName} onChange={(e) => setFamilyName(e.target.value)} />
       </div>
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Invite</button>
+      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700">Invite</button>
 
       {status && <p className="text-green-600 text-sm">{status}</p>}
       {error && <p className="text-red-600 text-sm">{error}</p>}
