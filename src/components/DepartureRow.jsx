@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { ChevronDown, ChevronRight, CalendarDays, Ship, Heart } from 'lucide-react';
 import CabinCategoryRow from './CabinCategoryRow';
+import { parseShortMonthDate } from '../utils/dateUtils.js';
 
 function DepartureRow({ departure, isFavorite, onToggleFavorite }) {
   const detailsRef = useRef(null);
@@ -13,17 +14,6 @@ function DepartureRow({ departure, isFavorite, onToggleFavorite }) {
   if (availableCats.length === 0) return null;
 
   const totalAvailable = availableCats.reduce((sum, cat) => sum + cat.num_cabins, 0);
-
-  const parseShortMonthDate = (str) => {
-    if (!str) return null;
-    const [year, monthAbbr, day] = str.split(" ");
-    const month = [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    ].indexOf(monthAbbr);
-    if (month === -1) return null;
-    return new Date(Date.UTC(+year, month, +day));
-  };
 
   const departureDate = parseShortMonthDate(departure.start_date);
   const endDate = parseShortMonthDate(departure.end_date);
