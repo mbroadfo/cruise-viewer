@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { fetchAndSortTrips } from '../components/FetchAndSortTrips';
+import { parseShortMonthDate } from '../utils/dateUtils';
 
 export default function useTrips() {
   const [trips, setTrips] = useState([]);
@@ -14,7 +15,7 @@ export default function useTrips() {
         setTrips(fetchedTrips);
 
         const allDates = fetchedTrips.flatMap(t =>
-          t.departures.map(d => new Date(d.start_date))
+          t.departures.map(d => parseShortMonthDate(d.start_date)).filter(Boolean)
         );
         const min = allDates.length ? new Date(Math.min(...allDates)) : '';
         const max = allDates.length ? new Date(Math.max(...allDates)) : '';

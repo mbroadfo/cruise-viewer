@@ -2,16 +2,19 @@ import React, { useRef, useState } from 'react';
 import { ChevronRight, ChevronDown } from 'lucide-react';
 import DepartureRow from './DepartureRow';
 import { config } from "../config.js";
+import { parseShortMonthDate } from '../utils/dateUtils';
 
 function TripCard({ trip, index, favorites, onToggleFavorite }) {
   const detailsRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  const formattedDate = new Date(trip.earliestDepartureDate).toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
+  const formattedDate = trip.earliestDepartureDate
+    ? new Date(parseShortMonthDate(trip.earliestDepartureDate)).toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
+    : '—';
 
   const handleToggle = () => {
     setIsOpen(detailsRef.current?.open);

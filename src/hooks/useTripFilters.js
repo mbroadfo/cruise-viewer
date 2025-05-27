@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
+import { parseShortMonthDate } from '../utils/dateUtils';
 
 const durationRanges = [
   { label: '1–4 days', min: 1, max: 4 },
@@ -19,7 +20,6 @@ export default function useTripFilters(trips, favorites, dateBounds) {
   });
 
   useEffect(() => {
-    // When dateBounds are known, update the initial filters
     if (dateBounds.min && dateBounds.max) {
       setFilters((f) => ({
         ...f,
@@ -33,9 +33,11 @@ export default function useTripFilters(trips, favorites, dateBounds) {
     return trips
       .map((trip) => {
         const matchingDepartures = trip.departures.filter((dep) => {
-          const depDate = new Date(dep.start_date);
-          const endDate = new Date(dep.end_date);
-          const duration = Math.floor((endDate - depDate) / (1000 * 60 * 60 * 24));
+          const depDate = parseShortMonthDate(dep.start_date);
+          const endDate = parseShortMonthDate(dep.end_date);
+          const duration = (depDate && endDate)
+            ? Math.floor((endDate - depDate) / (1000 * 60 * 60 * 24))
+            : NaN;
           const cabinCount = dep.categories.reduce(
             (sum, c) => (c.status === 'Available' ? sum + c.num_cabins : sum), 0);
           const matchesDuration =
