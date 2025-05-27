@@ -16,12 +16,19 @@ if (Test-Path $outputFile) {
 $includeExtensions = @(".js", ".jsx", ".ts", ".tsx", ".css", ".html", ".json", ".md")
 
 # Define folders to exclude
-$excludeFolders = @("node_modules", "dist", "build", ".git", ".next", "coverage", ".turbo")
+$excludeFolders = @("node_modules", "dist", "build", ".git", ".next", "coverage", ".turbo", ".pytest_cache")
+
+# Define files to exclude
+$excludeFiles = @("package-lock.json")
 
 # Recursively find matching files
 $allFiles = Get-ChildItem -Path $projectDir -Recurse -File
 
 foreach ($file in $allFiles) {
+    if ($excludeFiles -contains $file.Name) {
+        continue
+    }
+
     $relPath = $file.FullName.Substring($projectDir.Length + 1)
 
     # Skip excluded folders
