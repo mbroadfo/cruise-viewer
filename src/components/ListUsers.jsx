@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useAccessToken } from "../hooks/useAccessToken";
 import { config } from "../config.js";
-import { parseShortMonthDate } from "../utils/dateUtils";
 
 function UsersTable({ users }) {
   return (
@@ -27,7 +26,7 @@ function UsersTable({ users }) {
               <td className="border px-4 py-2">{user.user_id}</td>
               <td className="border px-4 py-2">{user.logins_count ?? "—"}</td>
               <td className="border px-4 py-2 whitespace-nowrap">
-                {user.last_login ? new Date(parseShortMonthDate(user.last_login)).toLocaleString() : "Never"}
+                {user.last_login && !isNaN(Date.parse(user.last_login)) ? new Date(user.last_login).toLocaleString() : "Never"}
               </td>
               <td className="border px-4 py-2">{user.favorites_count ?? 0}</td>
             </tr>
