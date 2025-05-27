@@ -21,6 +21,9 @@ $excludeFolders = @("node_modules", "dist", "build", ".git", ".next", "coverage"
 # Define files to exclude
 $excludeFiles = @("package-lock.json")
 
+# Generate Project Tree
+.\generate_project_tree.ps1
+
 # Recursively find matching files
 $allFiles = Get-ChildItem -Path $projectDir -Recurse -File
 

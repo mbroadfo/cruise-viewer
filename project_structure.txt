@@ -1,5 +1,4 @@
 ﻿.\
-  -- generate_project_tree.ps1
   -- .env
   -- .gitignore
   -- README.md
@@ -7,31 +6,15 @@
   -- deploy.ps1
   -- dump.ps1
   -- eslint.config.js
+  -- generate_project_tree.ps1
   -- index.html
   -- package-lock.json
   -- package.json
   -- postcss.config.js
+  -- project_structure.txt
   -- tailwind.config.js
   -- tsconfig.json
   -- vite.config.js
-src\components\
-  -- Header.jsx
-  -- AdminRoute.jsx
-  -- CabinCategoryRow.jsx
-  -- DeleteUser.jsx
-  -- DepartureRow.jsx
-  -- FetchAndSortTrips.jsx
-  -- FilterSidebar.jsx
-  -- InviteUser.jsx
-  -- ListUsers.jsx
-  -- TripCard.jsx
-src\hooks\
-  -- useAuth.js
-  -- useFavorites.js
-  -- useTripFilters.js
-  -- useTrips.js
-  -- useAccessToken.js
-  -- useViewerAccessToken.js
 public\
   -- favicon.jpg
   -- vite.svg
@@ -42,8 +25,29 @@ src\
   -- index.css
   -- main.jsx
   -- vite-env.d.ts
+src\components\
+  -- AdminRoute.jsx
+  -- CabinCategoryRow.jsx
+  -- DeleteUser.jsx
+  -- DepartureRow.jsx
+  -- FetchAndSortTrips.jsx
+  -- FilterSidebar.jsx
+  -- Header.jsx
+  -- InviteUser.jsx
+  -- ListUsers.jsx
+  -- TripCard.jsx
+src\hooks\
+  -- useAccessToken.js
+  -- useAuth.js
+  -- useFavorites.js
+  -- useTripFilters.js
+  -- useTrips.js
+  -- useViewerAccessToken.js
 src\pages\
   -- PortalAdmin.jsx
+src\utils\
+  -- dateUtils.js
+  -- debugLogs.js
 tests\
   -- test_admin_apis.ps1
   -- test_update_favorites.ps1
